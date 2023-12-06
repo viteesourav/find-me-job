@@ -1,0 +1,28 @@
+*** Project Notes on find-me-job website ***
+
+-- The Whole preoject we will complete in 3 parts [Following up with the Tutorial]
+
+1) FrontEnd Design [React JS + Redux]
+
+** Project Setup and the Required Dependencies used for the project
+** Navigation using react-router-dom
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2) BackEnd Design [Node JS + Mongo]
+
+3) Integration of FrontEnd and Backend using APIs
