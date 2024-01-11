@@ -1,12 +1,33 @@
 *** Project Notes on find-me-job website ***
-
 -- The Whole preoject we will complete in 3 parts [Following up with the Tutorial]
+-- techStack Used:
+   - FrontEnd: React, tailwind 
+   - BackEnd: Node, Express, MongoDB
 
 1) FrontEnd Design [React JS + Redux]
-
 ** Project Setup and the Required Dependencies used for the project
 ** Navigation using react-router-dom
-
+** Pages and Components Configured
+   -- Components: [used in all Pages] 
+      1) Navbar [Custom Menu, @headlessUi]
+         -- using headlessUi to build some complex functionailty like Hamburger Menu Dropdown.
+      2) footer
+      3) CustomButton
+      4) TextInput
+      5) Header
+      6) ListBox [Custom DropDown, @headLessUi]
+   
+   -- Setting up Redux Store, To Handle Global State Management. [@reduxjs/toolkit and react-redux]
+      -- 
+   
+   -- Screens/Pages:
+      1) AuthPage -DONE
+      2) FindJobs [Landing Page] - Working
+      3) UploadJob
+      4) UserProfile
+      5) Companies
+      6) CompanyProfile
+      7) AboutUs
 
 
 

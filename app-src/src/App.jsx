@@ -1,15 +1,17 @@
 import { Footer, Navbar } from "./components"
 import { Outlet, Navigate, Routes, Route, useLocation } from 'react-router-dom'
 import { AboutUs, AuthPage, Companies, CompanyProfile, FindJobs, JobDetail, UploadJob, UserProfile } from "./pages";
-
-const user = true;
+import { useSelector } from "react-redux";
 
 const Layout = () => {
+  const {user} = useSelector(state => state.user); //Fetching user from store
   const currLocation = useLocation();
+  // console.log('loggedIn User:', user);
   return user ? <Outlet /> : <Navigate to='/user-auth' state={{from: currLocation}} replace />
 }
 
 function App() {
+  const {user} = useSelector(state => state.user); //Fetching user from store
   return (
     <main>
       <Navbar />
