@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Header, ListBox } from '../components';
+import { CustomButton, Header, JobCard, ListBox } from '../components';
 import { BiBriefcaseAlt2 } from 'react-icons/bi';
 import { BsStar } from "react-icons/bs";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
@@ -55,8 +55,8 @@ const FindJobs = () => {
         setPageState={setFindJobState}
       />
       
-      {/*  */}
-      <div className='container mx-auto flex gap-6 md:px-5 2xl:gap-10 bg-white'>
+      {/* The Main Container */}
+      <div className='container mx-auto flex gap-6 py-8 md:px-5 2xl:gap-10 bg-[#f7fdfd] rounded-md mt-2'>
         {/* Left side Filter Search */}
         <div className='w-1/6 h-fit flex flex-col bg-white shadow-sm'>
           <p className='text-sm md:text-xl lg:text-2xl text-slate-600 font-semibold'>
@@ -121,7 +121,7 @@ const FindJobs = () => {
             </div>
           </div>
         </div>
-        {/* Main Container */}
+        {/* Job Card Container */}
         <div className='w-full flex flex-col gap-0 md:gap-2'>
             {/* The main container Header */}
             <div className="w-full h-fit flex justify-between mb-4 items-center">
@@ -140,18 +140,24 @@ const FindJobs = () => {
             </div>
 
             {/* Jobs Cards Container */}
-            <div className="w-full flex flex-wrap gap-2 md:gap-4">
+            <div className="w-full flex flex-wrap gap-2 md:gap-4 justify-around">
               {
                 jobs.map((jobData) => (
-                  <div
-                    className=''
-                    key={jobData.id}
-                  >
-                    {jobData.jobTitle}
-                  </div>
+                  <JobCard jobInfo={jobData} key={jobData.id}/>
                 ))
               }
             </div>
+            {/* LoadMore Jobs Btn */}
+            {
+              findJobState.page > findJobState.numPage && !isFetching &&
+              <div className='w-full flex items-center justify-center pt-14'>
+                <CustomButton
+                  title={'Load More'}
+                  customBtnStyle={'text-blue-600 bg-blue-100 text-xs px-4 py-1.5 rounded-full border border-blue-500 focus:outline-none hover:bg-blue-700 hover:text-white'}
+                />
+
+              </div>
+            }
         </div>
       </div>
     </div>

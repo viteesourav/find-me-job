@@ -105,16 +105,16 @@ const Navbar = () => {
           
           {/* Nav Menu Options to display */}
           <ul className='hidden lg:flex gap-10 text-base'>
-            <li className='border border-b-4 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out'>
+            <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to='/find-jobs'>Find Jobs</Link>
             </li>
-            <li className='border border-b-4 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out'>
+            <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to={'/companies'}>Companies</Link>
             </li>
-            <li className='border border-b-4 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out'>
+            <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to={'/upload-jobs'}>Upload Jobs</Link>
             </li>
-            <li className='border border-b-4 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out'>
+            <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to={'/about-us'}>About Us</Link>
             </li>
           </ul>

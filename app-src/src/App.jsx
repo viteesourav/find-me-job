@@ -13,7 +13,7 @@ const Layout = () => {
 function App() {
   const {user} = useSelector(state => state.user); //Fetching user from store
   return (
-    <main>
+    <main className="bg-[#fdf7f7]">
       <Navbar />
       <Routes>
         <Route element = {<Layout />}>

@@ -22,12 +22,13 @@
    
    -- Screens/Pages:
       1) AuthPage -DONE
-      2) FindJobs [Landing Page] - Working
-      3) UploadJob
-      4) UserProfile
-      5) Companies
-      6) CompanyProfile
-      7) AboutUs
+      2) FindJobs [Landing Page] - DONE
+      3) JobDetail - Working
+      4) UploadJob
+      5) UserProfile
+      6) Companies
+      7) CompanyProfile
+      8) AboutUs
 
 
 

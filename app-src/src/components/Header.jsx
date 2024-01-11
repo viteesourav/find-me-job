@@ -78,7 +78,7 @@ const Header = ({title, type, handleClick, searchQuery, location, setPageState})
                 </div>
                 {
                     type && (
-                        <div className='w-full md:w-2/3 flex flex-wrap gap-3 md:gap-6 py-10 md:py-14'>
+                        <div className='w-full flex flex-wrap gap-3 md:gap-6 py-5 md:py-7'>
                             {
                                 popularSearch.map((item, id) => (
                                     <span 
