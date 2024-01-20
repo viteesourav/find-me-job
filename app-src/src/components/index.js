@@ -6,3 +6,6 @@ export { default as SignUp } from './SignUp';
 export { default as Header } from './Header';
 export { default as ListBox } from './ListBox';
 export { default as JobCard } from './JobCard';
+export { default as Loading } from './Loading';
+export { default as CompanyCard } from './CompanyCard';
+export { default as JobType } from './JobType';

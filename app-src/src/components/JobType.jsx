@@ -2,22 +2,26 @@ import React, { Fragment, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { BsCheck2, BsChevronExpand } from 'react-icons/bs'
 
-const options = ["Newest", "Oldest", "A-Z", "Z-A"]
-  
-//Using the ListBox From the headlessUI...
-const ListBox = ({sort, setState}) => {
-    return (
-        <div className="w-[8rem] md:w-[10rem]">
-            <Listbox 
-                value={sort} 
-                onChange={(selectedVal)=> setState(prevState => ({
-                    ...prevState,
-                    sort: selectedVal
-                }))}
+ //The Avialble JobTypes Options...
+ const jobTypeOptions = [
+    'Full-Time',
+    'Part-Time',
+    'Contract',
+    'Intern',
+];
+
+// Same syntax as we used for Creating the ListBox component using ListBox Component form @headlessui
+const JobType = ({jobType, setJobType}) => {
+
+  return (
+    <div>
+        <Listbox 
+            value={jobType} 
+            onChange={(selectedVal)=> setJobType(selectedVal)}
             >
                 <div className="relative mt-1">
                 <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <span className="block truncate">{sort}</span>
+                    <span className="block truncate">{jobType}</span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <BsChevronExpand
                         className="h-5 w-5 text-gray-400"
@@ -32,7 +36,7 @@ const ListBox = ({sort, setState}) => {
                     leaveTo="opacity-0"
                 >
                     <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                    {options.map((val, idx) => (
+                    {jobTypeOptions.map((val, idx) => (
                         <Listbox.Option
                         key={idx}
                         className={({ active }) =>
@@ -63,9 +67,9 @@ const ListBox = ({sort, setState}) => {
                     </Listbox.Options>
                 </Transition>
                 </div>
-            </Listbox>
-        </div>
-    )
+        </Listbox>
+    </div>
+  )
 }
 
-export default ListBox
+export default JobType

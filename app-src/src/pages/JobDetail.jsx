@@ -4,7 +4,7 @@ import { jobs } from '../utils/data'
 import { FaHeartBroken } from "react-icons/fa";
 import moment from 'moment'
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
-import { CustomButton } from '../components'
+import { CustomButton, JobCard } from '../components'
 
 const JobDetail = () => {
   
@@ -14,23 +14,24 @@ const JobDetail = () => {
 
   // As the component Mounts, We will fetch the job details based on the id
   useEffect(()=>{
+    window.scrollTo({top: '0', left:'0', behavior:'smooth'});
+    let jobInfoFound = jobs.filter(item => item.id === id);
+    console.log('###JObInfo_Found: ', jobInfoFound);
     setJobInfo(prevState => {
-      window.scrollTo({top: '0', left:'0', behavior:'smooth'});
-      let jobInfoFound = jobs.filter(item => item.id === id);
       if(jobInfoFound && jobInfoFound.length > 0) {
         return jobInfoFound[0];
       } else {
         return ''
       }
   })
-  }, []);
-
+  }, [id]);
+  //useEffect should trigger re-load everytime the id is updated -> It will update the JobInfo
   // console.log('###JOb_details: ', jobInfo);
   
   return (
     jobInfo ? (
     <div className='container mx-auto'>
-      <div className="flex w-full flex-col md:flex-row gap-10">
+      <div className="flex w-full flex-col md:flex-row gap-5">
         {/* Left side */}
         <div className='w-full md:w-2/3 2xl:w-2/4 h-fit bg-white shadow-lg py-10 px-5 md:px-10 rounded-md mt-2'>
           {/* Job Heading */}
@@ -61,7 +62,7 @@ const JobDetail = () => {
             </div>
           </div>
           {/* Job Information */}
-          <div className='w-full flex flex-wrap flex-col md:flex-row gap-8 md:gap-6 lg:gap-4 xl:gap-2 items-center justify-between my-10'>
+          <div className='w-full flex flex-wrap flex-col sm:flex-row gap-8 md:gap-6 lg:gap-4 xl:gap-2 items-center justify-between my-10'>
             <div className='bg-[#bdf4c8] w-40 h-16 rounded-lg flex flex-col items-center justify-center'>
               <span className='text-sm '>salary</span>
               <span className='text-lg font-semibold text-slate-700'>{Intl.NumberFormat('en-us', {style:'currency', currency:'usd'}).format(jobInfo?.salary)}</span>
@@ -83,12 +84,12 @@ const JobDetail = () => {
           <div className='w-full flex flex-col md:flex-row gap-2 items-center justify-between'>
             <CustomButton
               title={'Job Description'}
-              customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl ${ jdSelected ? 'bg-black text-white border border-transparent' : 'bg-white text-black border border-black'}`}
+              customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl ${ jdSelected ? 'bg-black text-white border border-transparent' : 'bg-white text-black border border-black'} hover:shadow-xl`}
               onClick={() => setjdSelected(prevState => !prevState)}
             />
             <CustomButton
               title={'Company'}
-              customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl ${ jdSelected ? 'bg-white text-black border border-black': 'bg-black text-white border border-transparent'}`}
+              customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl ${ jdSelected ? 'bg-white text-black border border-black': 'bg-black text-white border border-transparent'} hover:shadow-xl`}
               onClick={() => setjdSelected(prevState => !prevState)}
             />
           </div>
@@ -141,7 +142,23 @@ const JobDetail = () => {
           }
         </div>
         {/* Right side */}
-        <div>Right Side</div>
+        <div className='w-full md:w-1/3 2xl:w-2/4 h-fit bg-[#fdf7f7ee] shadow-md py-5 px-5 md:px-8 rounded-md mt-2'>
+          <div className='w-full flex flex-col gap-2'>
+            <p className='text-base md:text-lg text-gray-500 font-semibold'>
+              Similar Job Post
+            </p>
+            <div className='w-full flex flex-row flex-wrap md:flex-col 2xl:flex-row gap-5 md:gap-8 justify-start md:justify-center py-2 lg:px-2'>
+              {
+                jobs.filter(job => job.id !== jobInfo.id).map((JobInfo, idx) => (
+                  <JobCard 
+                    jobInfo={JobInfo} 
+                    key={idx} 
+                  />
+                ))
+              }
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     ) : (
@@ -150,7 +167,7 @@ const JobDetail = () => {
           <span className='font-semibold text-lg px-2'>Sorry !</span> We are not able to fetch the Job Information at the moment !
         </p>
         <p className='block'>
-          Try Again After Somtime 
+          Try Again After Sometime 
         </p>
         <FaHeartBroken className='w-20 h-20 text-red-500 bg-[#fdf7f7] border border-transparent rounded-md hover:shadow-lg hover:shadow-red-200 hover:scale-125 hover:delay-300 ease-in-out' />
       </div>

@@ -7,6 +7,7 @@ import { HiMenuAlt3 } from 'react-icons/hi';
 import { AiOutlineClose, AiOutlineLogout } from 'react-icons/ai';
 import CustomButton from './CustomButton';
 import { users } from '../utils/data'
+import { useSelector } from 'react-redux';
 
 //creating a Menu List for the user to see options when loggedin
 //NOTE: The below is a component that is internally used in this screen only [that's why no seperate component for this]
@@ -52,7 +53,7 @@ const MenuList = ({user, onClick}) => {
                 {
                   ({active}) => (
                     <Link 
-                    to={`${user?.accountType ? 'user-profile':'company-profile'}`}
+                    to={`${user?.accountType ? `/user-profile`:`/company-profile/${user?.id}`}`}
                     className={`${active ? 'bg-blue-500 text-white' : 'text-gray-900'} flex w-full items-center rounded-md p-2 text-sm`}
                     onClick={onClick}
                     >
@@ -69,7 +70,7 @@ const MenuList = ({user, onClick}) => {
                 {
                   ({active}) => (
                     <button className={`${active ? 'bg-blue-500 text-white' : 'text-gray-900'} flex items-center w-full rounded-md p-2 text-sm`}
-                    onClick = {() => handleLogOut()}
+                    onClick = {handleLogOut}
                     >
                       <AiOutlineLogout className='mr-2 h-5 w-5'/>
                       Logout
@@ -87,7 +88,7 @@ const MenuList = ({user, onClick}) => {
 
 
 const Navbar = () => {
-  const user = users[1];
+  const {user} = useSelector(state => state.user);
   const[isOpen, setIsOpen] = useState(false);  //Handles the Opening and closing of hamburger menu in Mobile View.
 
   //Toggels the whole nav hamburger menu...
@@ -112,7 +113,7 @@ const Navbar = () => {
               <Link to={'/companies'}>Companies</Link>
             </li>
             <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
-              <Link to={'/upload-jobs'}>Upload Jobs</Link>
+              <Link to={'/upload-job'}>Upload Jobs</Link>
             </li>
             <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to={'/about-us'}>About Us</Link>

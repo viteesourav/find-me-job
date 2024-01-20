@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { useLocation } from 'react-router-dom'
@@ -54,7 +54,7 @@ const SignUp = ({open, setOpen}) => {
                 </Transition.Child>
 
                 <div className="fixed inset-0 overflow-y-auto">
-                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center mt-20">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-out duration-300"

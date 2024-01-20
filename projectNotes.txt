@@ -23,28 +23,14 @@
    -- Screens/Pages:
       1) AuthPage -DONE
       2) FindJobs [Landing Page] - DONE
-      3) JobDetail - Working
-      4) UploadJob
-      5) UserProfile
-      6) Companies
-      7) CompanyProfile
-      8) AboutUs
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      3) JobDetail - DONE
+      4) UploadJob -DONE
+      5) UserProfile -Working
+      6) Companies - DONE
+      7) CompanyProfile - DONE [*** Further Update: Handle the image upload and storing image later ***]
+      8) AboutUs -DONE
 
 2) BackEnd Design [Node JS + Mongo]
 
+   
 3) Integration of FrontEnd and Backend using APIs

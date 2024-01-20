@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 const Layout = () => {
   const {user} = useSelector(state => state.user); //Fetching user from store
   const currLocation = useLocation();
-  // console.log('loggedIn User:', user);
   return user ? <Outlet /> : <Navigate to='/user-auth' state={{from: currLocation}} replace />
 }
 
@@ -20,9 +19,11 @@ function App() {
           <Route path="/" element={<Navigate to={'/find-jobs'} replace />} />
           <Route path='/find-jobs' element={<FindJobs />} />
           <Route path='/companies' element={<Companies />} />
-          <Route path={
-            user?.user?.accountType === 'Seeker' ? '/user-profile' : '/user-profile/:id'
-          } element={<UserProfile />} />
+          {/* <Route path={
+            user?.accountType === 'Seeker' ? '/user-profile' : '/user-profile/:id'
+          } element={<UserProfile />} /> */}
+          <Route path='/user-profile' element={<UserProfile />} />
+          <Route path='/user-profile/:id' element={<UserProfile />} />
           <Route path='/company-profile' element={<CompanyProfile />} />
           <Route path='/company-profile/:id' element={<CompanyProfile />} />
           <Route path='/upload-job' element={<UploadJob />} />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CustomButton, Header, JobCard, ListBox } from '../components';
 import { BiBriefcaseAlt2 } from 'react-icons/bi';
@@ -22,6 +22,14 @@ const FindJobs = () => {
 
   const location = useLocation();
   const naviagte = useNavigate();
+
+  // As the component Mounts, Fetch the Job data from the server...
+  useEffect(()=> {
+    setFindJobState(prevState => ({
+      ...prevState,
+      data: jobs ? jobs : []
+    }))
+  }, []);
 
   //Handle, On JobType/experience CheckBox Selection...[//under evt.target -> checked [true/false] and value holds the checked value.]
   //check if the checked value is already present in the filtereJobTypes, If yes -> Remove it, If not add it.
@@ -142,7 +150,7 @@ const FindJobs = () => {
             {/* Jobs Cards Container */}
             <div className="w-full flex flex-wrap gap-2 md:gap-4 justify-around">
               {
-                jobs.map((jobData) => (
+                findJobState.data.map((jobData) => (
                   <JobCard jobInfo={jobData} key={jobData.id}/>
                 ))
               }
@@ -153,7 +161,7 @@ const FindJobs = () => {
               <div className='w-full flex items-center justify-center pt-14'>
                 <CustomButton
                   title={'Load More'}
-                  customBtnStyle={'text-blue-600 bg-blue-100 text-xs px-4 py-1.5 rounded-full border border-blue-500 focus:outline-none hover:bg-blue-700 hover:text-white'}
+                  customBtnStyle={'text-blue-600 bg-blue-100 text-xs px-10 py-1.5 rounded-full border border-blue-500 focus:outline-none hover:bg-blue-700 hover:text-white'}
                 />
 
               </div>

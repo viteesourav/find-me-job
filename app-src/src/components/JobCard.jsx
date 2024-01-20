@@ -6,7 +6,7 @@ import moment from 'moment'
 const JobCard = ({jobInfo}) => {
   return (
     <Link to={`/job-detail/${jobInfo.id}`}>
-        <div className='w-full md:w-[15rem] 2xl:w-[18rem] rounded-md px-3 py-5 flex flex-col justify-between shadow-lg bg-white'>
+        <div className='w-full md:w-[15rem] 2xl:w-[18rem] rounded-md px-3 py-5 flex flex-col justify-between shadow-lg bg-white hover:shadow-2xl'>
             <div className='flex gap-3'>
                 <img 
                     src={jobInfo?.company?.profileUrl} 
