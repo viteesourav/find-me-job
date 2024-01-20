@@ -25,12 +25,12 @@
       2) FindJobs [Landing Page] - DONE
       3) JobDetail - DONE
       4) UploadJob -DONE
-      5) UserProfile -Working
+      5) UserProfile -DONE
       6) Companies - DONE
       7) CompanyProfile - DONE [*** Further Update: Handle the image upload and storing image later ***]
       8) AboutUs -DONE
 
 2) BackEnd Design [Node JS + Mongo]
 
-   
+
 3) Integration of FrontEnd and Backend using APIs
