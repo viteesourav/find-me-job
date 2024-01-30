@@ -32,5 +32,8 @@
 
 2) BackEnd Design [Node JS + Mongo]
 
+   -- How to Work with JWT Tokens for API Authentication and Authorization. [** IMP **]
+   
+
 
 3) Integration of FrontEnd and Backend using APIs
