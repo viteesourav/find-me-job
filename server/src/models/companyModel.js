@@ -13,24 +13,29 @@ const companySchema = new mongoose.Schema({
         validate:validator.isEmail
     },
     authentication: {
-        password: {
-            type:String,
-            required: true,
-
+        type: {
+            password: {
+                type:String,
+                required: true,
+    
+            },
+            salt: {
+                type:String,
+                required: false,
+            }
         },
-        salt: {
-            type:String,
-            select: false,
-        }
+        select: false
     },
     contact: {type:String},
     location: {type:String},
     profileUrl: {type:String},
     about: {type:String},
-    jobPosts: {
-        type: Schema.Types.ObjectId,
-        ref: 'Job'
-    }
+    jobPosts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Job'
+        }
+    ]
 },
     {timestamps: true}
 );
@@ -38,6 +43,14 @@ const companySchema = new mongoose.Schema({
 //create the Model...
 const CompanyModel = mongoose.model('Company', companySchema);
 
+//CRUD Operations on CompanyModel...
+const fetchAllCompanies = () => CompanyModel.find();
+const fetchCompanyByEmailId = (email) => CompanyModel.findOne({email});
+const registerCompany = (companyObj) => new CompanyModel(companyObj).save().then(resp => resp.toJSON());
+
 export {
     CompanyModel,
+    fetchAllCompanies,
+    fetchCompanyByEmailId,
+    registerCompany,
 }

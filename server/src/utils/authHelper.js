@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import { jwt } from '../models/index.js';
 
 const CRYPTO_SECRET_KEY = 'This is a secret 5653625432436766';
-const JWT_SECRET_TOKEN = 'This is a secret 34563546345364';
+const JWT_SECRET_KEY = 'This is a secret 34563546345364';
 
 //Function to generate random 128-bit string...
 const generateSalt = () => crypto.randomBytes(128).toString('base64');
@@ -14,11 +14,11 @@ const parsePassword = (password, salt) => {
 
 //Funtion to create jwt
 const createToken = (id) => {
-    return JWT.sign(
+    return jwt.sign(
         {
             authorId: id
         },
-        JWT_SECRET_TOKEN,
+        JWT_SECRET_KEY,
         {
             expiresIn: '1d'
         }
@@ -29,4 +29,5 @@ export {
     generateSalt,
     parsePassword,
     createToken,
+    JWT_SECRET_KEY,
 }

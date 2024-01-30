@@ -1,12 +1,16 @@
 import express from 'express'
-import { doLogin, register } from '../controllers/authentication.js';
+import { companyRegister, doCompanyLogin, doLogin, register } from '../controllers/authentication.js';
 import catchAsync from '../utils/catchAsyncError.js';
 
 const router = express.Router();
 
 // Defining Auth Routes...
+//User Routes..
+router.get('/user/login', catchAsync(doLogin));
+router.post('/user/register', catchAsync(register));
 
-router.post('/login', catchAsync(register));
-router.post('/register', catchAsync(doLogin));
+//Company Routes...
+router.get('/company/login', catchAsync(doCompanyLogin));
+router.post('/company/register', catchAsync(companyRegister));
 
 export default router;

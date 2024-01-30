@@ -1,6 +1,7 @@
 import { mongoose, validator } from './index.js'
 
 //create the schema for user...
+//NOTE: Note the way we handles select for nested objects in authentication key.. [*** VIMP ***]
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -17,15 +18,17 @@ const userSchema = new mongoose.Schema({
         validate:validator.isEmail
     },
     authentication: {
-        password: {
-            type:String,
-            required: true,
-
+        type: {
+            password: {
+                type:String,
+                required: true,
+            },
+            salt: {
+                type:String,
+                required: true,
+            },
         },
-        salt: {
-            type:String,
-            select: false,
-        }
+        select:false
     },
     accountType: {type: String, default: 'Seeker'},
     contact: {type:String},
@@ -45,10 +48,14 @@ const UserModel = mongoose.model('User', userSchema);
 const createUser = (newUser) => new UserModel(newUser).save().then(user => user.toJSON());
 const getUserById = (id) => UserModel.findById(id);
 const getUserByEmail = (email) => UserModel.findOne({email});
+const getAllUsers = () => UserModel.find();
+const updateUserById = (id, userObj) => UserModel.findByIdAndUpdate(id, userObj, {new: true});
 
 export {
     UserModel,
     createUser,
     getUserById,
     getUserByEmail,
+    getAllUsers,
+    updateUserById
 }
