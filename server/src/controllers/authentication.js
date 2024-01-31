@@ -1,3 +1,4 @@
+import { fetchCompanyByEmailId, registerCompany } from "../models/companyModel.js";
 import { createUser, getUserByEmail } from "../models/userModel.js";
 import { createToken, generateSalt, parsePassword } from "../utils/authHelper.js";
 
@@ -113,7 +114,7 @@ const companyRegister = async (req, res, next) => {
         name,
         email,
         authentication: {
-            password,
+            password: parsePassword(password, salt),
             salt
         },
         contact, location, profileUrl, about, jobPosts
@@ -124,8 +125,37 @@ const companyRegister = async (req, res, next) => {
 }
 
 // Login with Company cred...
-const doCompanyLogin = (req, res) => {
+const doCompanyLogin = async (req, res) => {
+    //Field Validation...
+    const{email, password} = req.body;
 
+    if(!email || !password) {
+        return res.status(404).json({
+            message: 'EmailId and Password are Mandatory'
+        }).end();
+    }
+
+    //Check for email registered or not ?
+    const companyInfo = await fetchCompanyByEmailId(email).select('+authentication');
+    const isPasswordValid = companyInfo ? (parsePassword(password, companyInfo?.authentication?.salt) === companyInfo?.authentication?.password) : false;
+    
+    if(!companyInfo || !isPasswordValid) {
+        return res.status(401).json({
+            message: 'Either EmailId or Password is Invalid'
+        }).end()
+    }
+
+    //If password Check's Out, Loggedin the Company...
+    const jwtToken = createToken(companyInfo?._id);
+    return res.status(200).json({
+        message: 'Login Successful',
+        jwtToken,
+        company: {
+            _id: companyInfo._id,
+            email:companyInfo.email,      
+        }
+
+    }).end();
 }
 
 export {

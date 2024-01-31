@@ -33,6 +33,7 @@
 2) BackEnd Design [Node JS + Mongo]
 
    -- How to Work with JWT Tokens for API Authentication and Authorization. [** IMP **]
+   -- Using Mongoose Queries For chaining Mongo Operations [use of await with Moongose Model Operations]
    
 
 

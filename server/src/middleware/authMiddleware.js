@@ -19,13 +19,14 @@ const isAuthenticated = (req, res, next) => {
         
         //Extract the authorId form Token Payload and store in req.body...[will be used for Authorization]  
         req.body.authorId = tokenPaylod.authorId; 
+        
+        next();
     } catch(err) {
         return res.status(403).json({
             status: 'Token Invalid or Expired',
             errMsg: err
         })
     }
-    next();
 }
 
 export {

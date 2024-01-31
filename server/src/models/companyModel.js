@@ -47,10 +47,12 @@ const CompanyModel = mongoose.model('Company', companySchema);
 const fetchAllCompanies = () => CompanyModel.find();
 const fetchCompanyByEmailId = (email) => CompanyModel.findOne({email});
 const registerCompany = (companyObj) => new CompanyModel(companyObj).save().then(resp => resp.toJSON());
+const fetchCompanyById = (id) => CompanyModel.findById(id);
 
 export {
     CompanyModel,
     fetchAllCompanies,
     fetchCompanyByEmailId,
     registerCompany,
+    fetchCompanyById,
 }
