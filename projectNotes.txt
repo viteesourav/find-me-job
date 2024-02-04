@@ -1,4 +1,4 @@
-*** Project Notes on find-me-job website ***
+*** Project Notes on JobSphere Responsive Full-Stack Project***
 -- The Whole preoject we will complete in 3 parts [Following up with the Tutorial]
 -- techStack Used:
    - FrontEnd: React, tailwind 
@@ -34,6 +34,7 @@
 
    -- How to Work with JWT Tokens for API Authentication and Authorization. [** IMP **]
    -- Using Mongoose Queries For chaining Mongo Operations [use of await with Moongose Model Operations]
+   -- A Good way to implement Filtering the DB Data based on conditions using Mongoose Queries. [no await]
    
 
 

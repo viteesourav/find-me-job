@@ -58,8 +58,12 @@ const JobModel = mongoose.model('Job', jobSchema);
 
 //CRUD Layer supporting Mongo Operations...
 const addJob = (payload) => new JobModel(payload).save().then(obj => obj.toJSON());
+const updateJobById = (id, payload) => JobModel.findByIdAndUpdate(id, payload, {new: true}); //adding new returns the updated Record.
+const findJobById = (id) => JobModel.findById(id);
 
 export {
     JobModel,
     addJob,
+    updateJobById,
+    findJobById,
 }

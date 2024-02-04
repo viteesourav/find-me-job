@@ -1,17 +1,19 @@
 import express from 'express';
 import catchAsync from '../utils/catchAsyncError.js';
-import { createJob, deleteJobDetailsById, fetchJobDetailsById, updateJobInfoById } from '../controllers/jobContoller.js';
-import { isAuthenticated } from '../middleware/authMiddleware.js';
+import { createJob, deleteJobDetailsById, fetchJobDetailsById, fetchJobs, updateJobInfoById } from '../controllers/jobContoller.js';
+import { isAuthenticated, isCompanyUser } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // Handles all Routes for Jobs Posting...
 
-//Middleware before creating a jobPost: Must be Authenticated, Must be a companyUser [To DO]
-router.post('/jobPosts', isAuthenticated, catchAsync(createJob));
+//Middleware before creating, updating and deleting a jobPost: User must be Authenticated and must be a companyUser
+router.route('/jobPosts')
+    .post(isAuthenticated, isCompanyUser, catchAsync(createJob))
+    .get(isAuthenticated, catchAsync(fetchJobs));
 
 router.route('/jobPosts/:id')
-    .put(catchAsync(updateJobInfoById))
-    .get(catchAsync(fetchJobDetailsById))
-    .delete(catchAsync(deleteJobDetailsById));
+    .put(isAuthenticated, isCompanyUser, catchAsync(updateJobInfoById))
+    .get(isAuthenticated, catchAsync(fetchJobDetailsById))
+    .delete(isAuthenticated, isCompanyUser, catchAsync(deleteJobDetailsById));
 
 export default router;
