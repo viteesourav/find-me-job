@@ -66,16 +66,52 @@ Notable Features of Components:
    -- UserProfile/CompanyProfile:
       - This Pages Shows informtion about the respective Company or user.
       - It is Provides the Company or the User to update their latest Details in the Application.
-   -- AboutUs
+   -- AboutUs:
       - A Page describing the features and adavantages of using WorkSphere Application.
 
 
 2) BackEnd Design [Node JS + Mongo]
 
-   -- How to Work with JWT Tokens for API Authentication and Authorization. [** IMP **]
-   -- Using Mongoose Queries For chaining Mongo Operations [use of await with Moongose Model Operations]
-   -- A Good way to implement Filtering the DB Data based on conditions using Mongoose Queries. [no await]
-   
+** Packages Used:
+   - express, expressRouter. [Defining Routes For APIs]
+   - mongoose [Connect to mongoDB, Managing the MongoSchema and SchemaValidation]
+   - morgan [logs the Api Requests to the server]
+   - crypto [Generate and validate Password]
+   - JsonwebToken [Generates and verify Auth Bearer token]
+   - nodemon [Auto Re-start the server]
 
+** Implementing the basic Server Design using Express and Routes
+   -- Express frameWork is followed for the server design.
+   -- Routes are defined for the REST APIs for users, Company and Jobs.
+   -- Mongoose Schema is used to design the basic data storage Layout for each of the Routes.
+   -- Routes, Router and Route we have used to group CRUD Method having the same end-point URL.
+   -- In Routes, Auth and basic Error catching Middleware we have included before actually Querying the DB.
+   -- Controllers, We have defined the Mandatory field Validation and perform the respective CRUD Operations.
+   -- Controllers, We have used mongoose Query to Filter Out the DB Queries and exectute it later. [Implemented Custom Query Filteration of the data fetched from DB]
+   -- Error Handling,
+      - In Route, Controller Methods are passed through a middleware function, that catches any Error in them during Query Execution.
+      - On Error Encounter, we send the error to next(err).
+      - This is catched by the Express Error handling Middleware and Proper message is displayed. 
+
+** Implementation of Authentication using crypto.
+   - Crypto package is used to handle the encryption of the user's password. [crypto is available, no need to import seperately]
+   - crypto.randomBytes() -> Generates a 128Bytes,base64 String.
+   - crypto.craeteHmac() -> It is used to encypt the [salt + password] with a sha256 encryption.
+   - The parsed Pass is stored in the DB.
+   - For Password Verification:
+     - The Password Given by the user is passed through the same createHmac function, and then we compare the stored and newly parsed Password.  
+
+** Implementation of jwt in Authentication and Authorization.
+   - jwt: json web token.
+   - Package used: jwt from jsonwebtoken
+   - Jwt.sign() -> Can be used to generate a new Json webToke.
+      - The Token generated, can store any payload if needed, includes a secret_key and a expire Data.
+   - Jwt.verify() -> It is used to verify if the Token is valid based on the secret_key or If it is expired.
+
+** Implementing Middleware to handle Errors and Auth.
+   - In Routes, Before hitting the actual Controller Functions, Each API call goes through a series of Functions.
+   - This Functions are:
+      - isAuthenticated [Validates the jwt token passed in Header, If valid stores the authorId from the token to req body]
+      - isCompany [Validates if the authorId extracted from the token belongs to a company or User, use for Restricting API calls to Company Only]
 
 3) Integration of FrontEnd and Backend using APIs
