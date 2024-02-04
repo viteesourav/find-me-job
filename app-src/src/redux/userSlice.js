@@ -3,7 +3,7 @@ import { users } from '../utils/data';
 
 //initial userState..
 const initialState = {
-    user: JSON.parse(window?.localStorage.getItem('userInfo')) ?? users[1],
+    user: JSON.parse(window?.localStorage.getItem('userInfo')) ??  {},//users[1],
 }
 
 const userSlice = createSlice({

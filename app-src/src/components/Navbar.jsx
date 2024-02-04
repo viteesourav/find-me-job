@@ -101,7 +101,7 @@ const Navbar = () => {
       <div className='relative bg-[#f7fdfd] z-50'>
         <nav className='container mx-auto flex items-center justify-between p-5'>
           <div>
-            <Link to='/' className='text-blue-600 font-bold text-3xl'>Job<span className='text-[#167ccb]'>Sphere</span></Link>
+            <Link to='/' className='text-blue-600 font-bold text-3xl'>Work<span className='text-[#167ccb]'>Sphere</span></Link>
           </div>
           
           {/* Nav Menu Options to display */}

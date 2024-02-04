@@ -61,7 +61,7 @@ const Footer = () => {
           <p className='container mx-auto px-5 text-white mt-2'>
             Subscribe to our Newsletter
           </p>
-          <div className='container mx-auto px-5 pt-6 pb-8 flex flex-wrap items-center justify-between'>
+          <div className='container mx-auto px-5 pb-8 flex flex-wrap items-center justify-between'>
               <div className='w-full md:w-2/4 lg:w-1/3 h-16 flex item-center justify-center md:justify-start gap-4'>
                 <TextInput 
                   customStyles='w-full flex flex-grow w-[450px] md:w-[300px] 2xl:w-80 bg-gray-100 mb-2'

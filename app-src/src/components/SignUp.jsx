@@ -201,7 +201,7 @@ const SignUp = ({open, setOpen}) => {
                                     {
                                         isNewUser ? 
                                         'Already has an account ?' :
-                                        'Do not have an account'
+                                        'Do not have an account ?'
                                     }
                                     <span 
                                         className='ml-2 text-sm text-blue-600 nl-2 hover:text-blue-700 hover:text-semibold cursor-pointer'

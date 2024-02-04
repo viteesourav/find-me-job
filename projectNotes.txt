@@ -1,34 +1,74 @@
-*** Project Notes on JobSphere Responsive Full-Stack Project***
--- The Whole preoject we will complete in 3 parts [Following up with the Tutorial]
--- techStack Used:
-   - FrontEnd: React, tailwind 
-   - BackEnd: Node, Express, MongoDB
+*** Project Notes on WorkSphere Responsive Full-Stack Project ***
+
+Tech Stack:
+   - FrontEnd: Js, React, tailwindCSS, react-form-hook, react-router-dom, @headlessUi[For Modals, Menu and DropDown]
+   - BackEnd: Node, Express, MongoDB [as Primary DataBase], Cloudinary [Store images]
 
 1) FrontEnd Design [React JS + Redux]
-** Project Setup and the Required Dependencies used for the project
-** Navigation using react-router-dom
-** Pages and Components Configured
-   -- Components: [used in all Pages] 
-      1) Navbar [Custom Menu, @headlessUi]
-         -- using headlessUi to build some complex functionailty like Hamburger Menu Dropdown.
-      2) footer
-      3) CustomButton
-      4) TextInput
-      5) Header
-      6) ListBox [Custom DropDown, @headLessUi]
+
+** Project Routes & Navigation:
+   -- NPM Package Used: react-router-dom.
+   -- In main.jsx, the app component is wrapped with BrowserRouter.
+   -- In App.jsx, Route component is used to Handle the navigation to different Pages.
    
-   -- Setting up Redux Store, To Handle Global State Management. [@reduxjs/toolkit and react-redux]
-      -- 
+   Features:
+      -- Before Naviagting to a Page, It checks if the user is loggedin or not ?
+      -- Achieved using 
+         - Routes [Holds Route url-component Mapping for all Pages], 
+         - Outlet [Renders sub-Routes]
+         - Naviagte [Naviagte to Particular Url]
+
+** Project Components:
+   - Navbar [Custom Menu, @headLessUi]             - SignUp [Dialog Model, @headLessUi]
+   - Footer                                        - Header
+   - TextInput                                     - Loading
+   - CustomButton                                  - ListBox [Custom DropDown, @headlessUi]
+   - JobCard, JobType                              - CompanyCard
+
+Notable Features of Components:
+   -- Navbar provides a collapsable Hamburger Icon Menu on mobile view and is responsive by design.
+   -- Navbar provides Navigation Options to different Pages Supported by the app. It also Provides User to SignIn/LogIn/LogOut of the Application. 
+   -- SignUp Component is designed based on a Popup Model. Provide User Options either to Register or Login to application. Includes Field Validations.
+   -- Header, Provides and Manages User Search Filter For Jobs in the HomePage.
+   -- Footer, Holds Options to Naviagte to Application's help and support, User can Suscribe to Company's NewsLetter.
+   -- TextInput, Manages the Text Input Field used in the Application.
+   -- Loading, Provide a pulse Animation while waiting for the backend resp.
+
+** Redux Store Setup [Global State Management]
+   -- Packages Used: react-redux, @reduxjs/toolkit.
+   -- In Main.jsx, Provider Component Wraps Up the whole App Component. Makes Redux Store accessable to all Components under App.
+   -- Redux store holds the loggedin UserInfo.
+   -- userSlice,
+      - Defines the initial Redux Store state for the user.
+      - defines the actions and the linked Reducers.
+      - logIn and logout Actions are exported for furthur use in the App.
+   -- In App,
+      - WhereEver we need the redux store state, useSelector() hook has access to the store's info.
+      - To dispatch any actions to the store, We can use the instance of useDispatch to dispatch an action with the desire payload.
    
-   -- Screens/Pages:
-      1) AuthPage -DONE
-      2) FindJobs [Landing Page] - DONE
-      3) JobDetail - DONE
-      4) UploadJob -DONE
-      5) UserProfile -DONE
-      6) Companies - DONE
-      7) CompanyProfile - DONE [*** Further Update: Handle the image upload and storing image later ***]
-      8) AboutUs -DONE
+** Project Landing Pages Features:
+   -- AuthPage:
+      - Page Shows Modal view For Either Register New User or logIn Existing User.
+   -- FindJobs [Home Page]:
+      - Application Lanidng Page.
+      - It includes a Search bar, For the User to Filter the Jobs based on Given Options.
+      - User can View all the Recent Job Postings in Form of Clickable Cards, That OnClick Naviagtes to the jobDetails Page.
+   -- JobDetail:
+      - Shows details related to a particular Job.
+      - Include Information like jobDescription, salary, jobTitile, Experience Requirements.
+      - User can also see, Similar Jobs Options to select from if he wishes.
+   -- UploadJob:
+      - This Page can be used by Company to Uplod new Job Offers.
+      - It's built based on React-form-hook and includes Validation.
+   -- Companies:
+      - This Page Shows all the Registered Companies.
+      - User also can see the number of Jobs Posted by each one of these companies.
+   -- UserProfile/CompanyProfile:
+      - This Pages Shows informtion about the respective Company or user.
+      - It is Provides the Company or the User to update their latest Details in the Application.
+   -- AboutUs
+      - A Page describing the features and adavantages of using WorkSphere Application.
+
 
 2) BackEnd Design [Node JS + Mongo]
 
