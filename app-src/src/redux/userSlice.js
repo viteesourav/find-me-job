@@ -13,12 +13,12 @@ const userSlice = createSlice({
         login: ((state, action) => {
             const userData = action.payload.user;
             state.user = userData;
-            window?.localStorage.setItem('userInfo', state.user);
+            state.user && window.localStorage.setItem('userInfo', JSON.stringify(state.user));
         }),
 
         logout: ((state, action) => {
             state.user = null;
-            localStorage?.removeItem('userInfo'); //Clear the saved userInfo from localStorage..
+            window.localStorage.removeItem('userInfo'); //Clear the saved userInfo from localStorage..
         })
     }
 })

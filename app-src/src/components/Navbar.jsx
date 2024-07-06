@@ -7,13 +7,19 @@ import { HiMenuAlt3 } from 'react-icons/hi';
 import { AiOutlineClose, AiOutlineLogout } from 'react-icons/ai';
 import CustomButton from './CustomButton';
 import { users } from '../utils/data'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../redux/userSlice.js';
 
 //creating a Menu List for the user to see options when loggedin
 //NOTE: The below is a component that is internally used in this screen only [that's why no seperate component for this]
 const MenuList = ({user, onClick}) => {
+  
+  const dispatch = useDispatch();
+
   const handleLogOut = () => {
-    console.log('###Logger: Logging You Out')
+    console.log('###Logger: Logging You Out');
+    dispatch(logout());
+    onClick();
   };
 
   return (
@@ -128,7 +134,11 @@ const Navbar = () => {
                   <CustomButton title={'Sign In'} 
                     type={'button'} 
                     customBtnStyle={' text-blue-600 py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600'}  
-                    onClick={()=>console.log('#####SignIn btn Clicked')}
+                    onClick={()=> {
+                      console.log('#####SignIn btn Clicked');
+                      handleOnNavClose();
+                      }
+                    }
                   />
                 </Link>
               ): (
@@ -164,7 +174,11 @@ const Navbar = () => {
                   <CustomButton title={'Sign In'} 
                     type={'button'} 
                     customBtnStyle={' text-blue-600 py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600'}  
-                    onClick={()=>console.log('#####SignIn btn Clicked')}
+                    onClick={()=>{ 
+                      console.log('#####SignIn btn Clicked');
+                      handleOnNavClose(); 
+                      }
+                  }
                   />
                 </Link>
               ): (

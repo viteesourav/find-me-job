@@ -5,25 +5,78 @@ import { useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import TextInput from './TextInput'
 import CustomButton from './CustomButton'
+import { fetchData } from '../utils/index.js'
+import { login } from '../redux/userSlice.js'
 
 const SignUp = ({open, setOpen}) => {
 
     const dispatch = useDispatch();
-    const[isNewUser, setIsNewUser] = useState(true);
+    const[isNewUser, setIsNewUser] = useState(false);
     const[accountType, setAccountType] = useState('seeker');
     const [errMsg, setErrMsg] = useState("");
 
     //fetch from where we came to this page...
     const location = useLocation();
-    let from = location?.state?.from?.pathname || '/';
+    let prevPageUrl = location?.state?.from?.pathname || '/';
 
     //Handle onClose and OnSubmit of the dialog box..
     const closeModal = () => setOpen(false);
-    const OnSubmit = (formData) => {
-        closeModal();
-        console.log("#####Form Submitted Successfully !");
-        console.log(formData);
+    
+    //Handle When user submits in auth Screen...
+    const OnSubmit = async (formData) => {
+        try {
+            //Lets prepare the url_path...
+            let url_path = 'auth/' + (isNewUser ? (
+                accountType === 'seeker' ? 'user/register' : 'company/register'
+            ) : (
+                accountType === 'seeker' ? 'user/login' : 'company/login'
+            ));
+            
+            const resp = await fetchData({
+                url: url_path,
+                method: "POST",
+                data: {
+                    name: formData.companyName ?? '',
+                    email: formData.email,
+                    password: formData.password,
+                    firstName: formData.firstName ?? '',
+                    lastName: formData.lastName ?? ''
+                }
+            });
+
+            if(resp.err) {
+                setErrMsg(resp?.msg);
+            } else {
+                setErrMsg("");
+                console.log('## Response Successfull from backend: ',resp);
+                
+                //dispatch from react-redux --> sets the redux user state.
+                dispatch(login({ 
+                                user: {
+                                        token: resp.data?.token,
+                                        ...resp.data
+                                    }
+                                }
+                        ));
+                
+                //Navigates to the page from where you came to Auth Page and close the Model Window..
+                //window.location.replace(prevPageUrl);
+                //closeModal(true);
+
+            }
+
+        } catch(error) {
+            console.log(error);
+        } finally {
+            console.log("#####Form Submitted Successfully !", formData);
+        }
     }
+
+    //handles toggel of accountType...
+    const handleAccTypeToggle = (type, resetfrmData) => {
+        setAccountType(type);
+        resetfrmData();
+    };
 
     //initialise the react-hook-form
     const {
@@ -31,7 +84,8 @@ const SignUp = ({open, setOpen}) => {
         handleSubmit,
         getValues,
         watch, 
-        formState: {errors}
+        formState: {errors},
+        reset
     } = useForm({
         mode: 'onChange'
     })
@@ -74,13 +128,13 @@ const SignUp = ({open, setOpen}) => {
                             <div className='w-full flex flex-grow justify-center py-4 item-center'>
                                 <button 
                                     className={`flex-1 px-4 py-2 rounded-l outline-none font-semibold ${accountType === 'seeker' ? 'bg-[#1d4fd862] text-blue-900' : 'bg-white border border-blue-400'}`}
-                                    onClick={() => setAccountType('seeker')}
+                                    onClick={() => handleAccTypeToggle('seeker', reset)}
                                 >
                                     User Account
                                 </button>
                                 <button 
                                     className={`flex-1 px-4 py-2 rounded-r outline-none font-semibold ${accountType === 'company' ? 'bg-[#1d4fd862] text-blue-900' : 'bg-white border border-blue-400'}`}
-                                    onClick={() => setAccountType('company')}
+                                    onClick={() => handleAccTypeToggle('company', reset)}
                                 >
                                     Company Account
                                 </button>
@@ -205,7 +259,11 @@ const SignUp = ({open, setOpen}) => {
                                     }
                                     <span 
                                         className='ml-2 text-sm text-blue-600 nl-2 hover:text-blue-700 hover:text-semibold cursor-pointer'
-                                        onClick={()=>setIsNewUser(prev => !prev)}
+                                        onClick={()=> { 
+                                            setIsNewUser(prev => !prev);
+                                            reset();
+                                            }
+                                        }
                                     >
                                         {
                                             isNewUser ? 

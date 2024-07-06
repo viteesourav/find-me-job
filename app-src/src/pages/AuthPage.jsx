@@ -13,7 +13,7 @@ const AuthPage = () => {
   let naviagtedFrom = location?.state?.from?.pathname || '/';  //If previous path not found, redirect to home page.
   // console.log('####', naviagtedFrom);
   //If the userToken Exist i.e User is already loggedin redirect him to where he came from to this page...
-  if(user.token) {
+  if(user && user?.token) {
     return window.location.replace(naviagtedFrom);
   }
 

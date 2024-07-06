@@ -38,16 +38,14 @@ const register = async (req, res, next) => {
         },
         accountType,contact,location,profileUrl,jobTitle,about,
     });
-    const jwtToken = createToken(newUser._id);
+    const token = createToken(newUser._id);
     return res.status(201).json({
         message: 'user Successfully created',
-        jwtToken,
-        user: {
-            _id: newUser._id,
-            email: newUser.email,
-            firstName: newUser.firstName,
-            lastName: newUser.lastName   
-        }
+        token,
+        _id: newUser._id,
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName
     }).end();
 }
 
@@ -75,16 +73,14 @@ const doLogin = async (req, res, next) => {
             message:'Either EmailId or Password is Invalid'
         })
     }
-    const jwtToken = createToken(user._id);
+    const token = createToken(user._id);
     return res.status(200).json({
         message: 'Login Successful',
-        jwtToken,
-        user: {
-            _id: user._id,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName   
-        }
+        token,
+        _id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
     }).end();
 }
 
@@ -129,6 +125,8 @@ const doCompanyLogin = async (req, res) => {
     //Field Validation...
     const{email, password} = req.body;
 
+    console.log('###Payload', req.body);
+
     if(!email || !password) {
         return res.status(404).json({
             message: 'EmailId and Password are Mandatory'
@@ -146,14 +144,12 @@ const doCompanyLogin = async (req, res) => {
     }
 
     //If password Check's Out, Loggedin the Company...
-    const jwtToken = createToken(companyInfo?._id);
+    const token = createToken(companyInfo?._id);
     return res.status(200).json({
         message: 'Login Successful',
-        jwtToken,
-        company: {
-            _id: companyInfo._id,
-            email:companyInfo.email,      
-        }
+        token,
+        _id: companyInfo._id,
+        email:companyInfo.email,
 
     }).end();
 }
