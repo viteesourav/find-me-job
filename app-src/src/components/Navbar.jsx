@@ -116,7 +116,7 @@ const Navbar = () => {
               <Link to='/find-jobs'>Find Jobs</Link>
             </li>
             <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
-              <Link to={'/companies'}>Companies</Link>
+              <Link to={'/company/getAll'}>Companies</Link>
             </li>
             <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to={'/upload-job'}>Upload Jobs</Link>
@@ -164,7 +164,7 @@ const Navbar = () => {
         >
           {/* Note: Here the OnCLick Close the DropDown as soon as You click on the Link */}
           <Link to={'/find-jobs'} onClick={handleOnNavClose}>Find Jobs</Link>  
-          <Link to={'/companies'} onClick={handleOnNavClose}>Companies</Link>
+          <Link to={'/company/getAll'} onClick={handleOnNavClose}>Companies</Link>
           <Link to={'/upload-jobs'} onClick={handleOnNavClose}>Upload Jobs</Link>    
           <Link to={'/about-us'} onClick={handleOnNavClose}>About Us</Link> 
           <div className='w-full py-10'>

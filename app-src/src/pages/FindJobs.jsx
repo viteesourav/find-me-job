@@ -61,6 +61,7 @@ const FindJobs = () => {
         searchQuery={findJobState.searchQuery}
         location={findJobState.jobLocation}
         setPageState={setFindJobState}
+        isShowSearchBtn = {true}
       />
       
       {/* The Main Container */}

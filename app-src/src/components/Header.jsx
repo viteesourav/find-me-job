@@ -35,7 +35,7 @@ const SearchInput = ({placeholder, icon, value, searchKey, setSearchValue, style
 }
 
 // The Main Header Component...
-const Header = ({title, type, handleClick, searchQuery, location, setPageState}) => {
+const Header = ({title, type, handleClick, searchQuery, location, setPageState, isShowSearchBtn}) => {
   
     //Function to handle onClick of Search...
     const handleSearch = () => {
@@ -66,15 +66,17 @@ const Header = ({title, type, handleClick, searchQuery, location, setPageState})
                         placeholder='Add Country or State'
                         icon={<CiLocationOn className='text-gray-600 text-xl' />}
                         value={location}
-                        searchKey={'jobLocation'}
+                        searchKey={'cmpLocation'}
                         setSearchValue={setPageState}
                     />
-                    <CustomButton
+                    {isShowSearchBtn && 
+                        <CustomButton
                         title={'Search'}
                         customBtnStyle={'text-white py-2 md:py-3 px-3 md:px-10 focus:outline-none bg-blue-600 rounded-full md-rounded-md text-sm md:text-base hover:bg-blue-900'}
                         type={'button'}
                         onClick={handleSearch}
-                    />
+                        />
+                    }
                 </div>
                 {
                     type && (

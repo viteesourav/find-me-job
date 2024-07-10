@@ -7,6 +7,8 @@ import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { CustomButton, JobCard } from '../components'
 import { fetchData } from '../utils';
 import { useSelector } from 'react-redux';
+import { FaMapLocationDot } from 'react-icons/fa6';
+import { MdEmail } from 'react-icons/md';
 
 const JobDetail = () => {
   
@@ -79,7 +81,7 @@ const JobDetail = () => {
               </div>
             </div>
             <div className='w-1/4'>
-              <AiOutlineSafetyCertificate className='text-3xl text-blue-500' />
+              <AiOutlineSafetyCertificate className='w-full text-5xl xl:text-6xl text-blue-500' />
             </div>
           </div>
           {/* Job Information */}
@@ -142,18 +144,24 @@ const JobDetail = () => {
               // For showing company Information
               <div className='w-full flex flex-col gap-3 py-8'>
                 <div className='flex flex-col'>
-                  <p className='text-lg font-semibold'>
+                  <p className='text-lg xl:text-xl font-semibold'>
                     {jobInfo?.company?.name}
                   </p>
-                  <p className='text-base'>
-                    {jobInfo?.company?.location}
-                  </p>
-                  <p className='text-blue-500 text-base'>
-                    {jobInfo?.company?.email}
-                  </p>
+                  <div className='w-full h-fit flex flex-row justify-start items-center gap-1'>
+                    <FaMapLocationDot className='text-base text-slate-700' />
+                    <span className='text-base'>
+                      {jobInfo?.company?.location}
+                    </span>
+                  </div>
+                  <div className='w-full h-fit flex flex-row justify-start items-center gap-1'>
+                    <MdEmail className='text-base text-slate-700' />
+                    <span className='text-blue-500 text-base'>
+                      {jobInfo?.company?.email}
+                    </span>
+                  </div>
                 </div>
                 <div className='flex flex-col gap-1'>
-                  <p className='text-xl font-semibold'>About</p>
+                  <p className='text-xl xl:text-2xl font-semibold'>About</p>
                   <span className='text-sm font-serif'>
                     {jobInfo?.company?.about}
                   </span>
