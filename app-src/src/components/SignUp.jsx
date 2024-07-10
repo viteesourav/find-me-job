@@ -12,7 +12,7 @@ const SignUp = ({open, setOpen}) => {
 
     const dispatch = useDispatch();
     const[isNewUser, setIsNewUser] = useState(false);
-    const[accountType, setAccountType] = useState('seeker');
+    const[accountType, setAccountType] = useState('seeker');``
     const [errMsg, setErrMsg] = useState("");
 
     //fetch from where we came to this page...

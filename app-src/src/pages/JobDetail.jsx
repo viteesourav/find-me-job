@@ -5,35 +5,56 @@ import { FaHeartBroken } from "react-icons/fa";
 import moment from 'moment'
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { CustomButton, JobCard } from '../components'
+import { fetchData } from '../utils';
+import { useSelector } from 'react-redux';
 
 const JobDetail = () => {
   
   const{id} = useParams();
+  const {user} = useSelector(state => state.user);
   const[jobInfo, setJobInfo] = useState('');
+  const[similarJobInfo, setSimilarJobInfo] = useState('');
   const[jdSelected, setjdSelected] = useState(true);
+  const[isLoading, setIsLoading] = useState(false);
+
+  //service call to fetch Job details based on JobId...
+  const fetchJobDetaial = async () => {
+    setIsLoading(true);
+
+    const resp = await fetchData({
+      url: 'job/jobPosts/' + id,
+      method: 'GET',
+      token: user?.token
+    })
+
+    setIsLoading(false);
+    
+    if(resp.status === 200) {
+      console.log('###Job Details fetched: ', resp?.data);
+      setJobInfo(resp?.data?.job);
+      if(resp?.data?.similarJobs) {
+        setSimilarJobInfo(resp?.data?.similarJobs);
+      }
+    } else {
+      console.log('###Unable to fetch Job Details');
+      setJobInfo('');
+    }
+  };
 
   // As the component Mounts, We will fetch the job details based on the id
-  useEffect(()=>{
+  useEffect(()=> {
+    fetchJobDetaial();
     window.scrollTo({top: '0', left:'0', behavior:'smooth'});
-    let jobInfoFound = jobs.filter(item => item.id === id);
-    console.log('###JObInfo_Found: ', jobInfoFound);
-    setJobInfo(prevState => {
-      if(jobInfoFound && jobInfoFound.length > 0) {
-        return jobInfoFound[0];
-      } else {
-        return ''
-      }
-  })
-  }, [id]);
+  }, []);
   //useEffect should trigger re-load everytime the id is updated -> It will update the JobInfo
   // console.log('###JOb_details: ', jobInfo);
   
   return (
     jobInfo ? (
     <div className='container mx-auto'>
-      <div className="flex w-full flex-col md:flex-row gap-5">
+      <div className="flex w-[90%] flex-col md:flex-row gap-5 mx-auto">
         {/* Left side */}
-        <div className='w-full md:w-2/3 2xl:w-2/4 h-fit bg-white shadow-lg py-10 px-5 md:px-10 rounded-md mt-2'>
+        <div className='w-full md:w-3/4 2xl:w-2/4 h-fit bg-white shadow-lg py-10 px-5 md:px-10 rounded-md mt-2'>
           {/* Job Heading */}
           <div className="w-full flex items-center justify-between">
             <div className='w-3/4 flex gap-2'>
@@ -100,13 +121,13 @@ const JobDetail = () => {
                 <div className='flex flex-col gap-1'>
                   <p className='text-xl font-semibold'>Job Description</p>
                   <span className='text-sm font-serif'>
-                    {jobInfo?.detail[0]?.desc}
+                    {jobInfo?.about?.desc}
                   </span>
                 </div>
                 <div className='flex flex-col gap-1'>
                   <p className='text-xl font-semibold'>Job Requirement</p>
                   <span className='text-sm font-serif'>
-                    {jobInfo?.detail[0]?.requirement}
+                    {jobInfo?.about?.requirements}
                   </span>
                 </div>
                 <div className='w-full flex flex-col md:flex-row gap-2 items-center justify-between'>
@@ -142,14 +163,14 @@ const JobDetail = () => {
           }
         </div>
         {/* Right side */}
-        <div className='w-full md:w-1/3 2xl:w-2/4 h-fit bg-[#fdf7f7ee] shadow-md py-5 px-5 md:px-8 rounded-md mt-2'>
+        <div className='w-full md:w-1/4 2xl:w-2/4 h-fit bg-[#fdf7f7ee] shadow-md py-5 px-5 md:px-8 rounded-md mt-2'>
           <div className='w-full flex flex-col gap-2'>
-            <p className='text-base md:text-lg text-gray-500 font-semibold'>
+            <p className='text-base md:text-lg text-gray-500 font-semibold text-center'>
               Similar Job Post
             </p>
-            <div className='w-full flex flex-row flex-wrap md:flex-col 2xl:flex-row gap-5 md:gap-8 justify-start md:justify-center py-2 lg:px-2'>
+            <div className='w-full flex flex-row flex-wrap md:flex-col gap-5 md:gap-8 justify-around py-2'>
               {
-                jobs.filter(job => job.id !== jobInfo.id).map((JobInfo, idx) => (
+                similarJobInfo.slice(0, 4).map((JobInfo, idx) => (
                   <JobCard 
                     jobInfo={JobInfo} 
                     key={idx} 

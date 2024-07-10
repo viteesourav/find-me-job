@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react'
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom'
 import { companies, jobs } from '../utils/data';
 import { CustomButton, JobCard, Loading, TextInput } from '../components';
 import { FiEdit3, FiUpload } from 'react-icons/fi';
@@ -10,14 +10,54 @@ import { FiPhoneCall } from 'react-icons/fi';
 import { useForm } from 'react-hook-form'
 import { Dialog, Transition } from '@headlessui/react';
 import { CgClose } from "react-icons/cg";
+import { fetchData, handleFileUploads } from '../utils';
+import { login } from '../redux/userSlice';
 
-//Function Component -> Show Compnay Info Edit Modal [Popup] [*** NOTE: Handle the image upload and storing image later ***]
+//Function Component -> Show Compnay Info Edit Modal [Popup] [*** NOTE: Handled the image upload and storing image using cloudinary ***]
 const CompanyModal = ({isShowForm, toggelForm, companyData}) => {
   const closeModal = () => toggelForm(false);
-  const[profileIm, setProfileImg] = useState(companyData?.profileUrl);
-  const OnSubmit = (frmObj) => {
-    closeModal();
-    console.log("#####Form Submitted Successfully !", frmObj);
+  const [profileImg, setProfileImg] = useState('');
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // handle update company-Info...
+  const OnSubmit = async(frmObj) => {
+
+    setIsLoading(true);
+    //handle uploading the profileImg..
+    const imgUrl = profileImg && (await handleFileUploads(profileImg));
+
+    const updatePayload = imgUrl ? {...frmObj, profileUrl: imgUrl, authorId: companyData._id} : {...frmObj, authorId: companyData._id};
+
+    //handle API call to update company-profile Info...
+    try {
+      const res = await fetchData({
+        url: 'company/companyProfile',
+        data: updatePayload,
+        method: 'PUT',
+        token: companyData?.token
+      });
+      setIsLoading(false);
+      if(res.status === 200) {
+        if(res.data) {
+          res.data.token = companyData?.token;
+        }
+        
+        dispatch(login({
+          user: res.data
+        }));
+        
+        console.log('####Update Successful', res);  
+        setTimeout(()=> window.location.reload(), 1500); //reload the current Page...
+      } else {
+        console.log('###Internal Error: ',res);
+      }
+      closeModal(true);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log("#####Form Submitted Successfully !", frmObj);
+    }
   }
 
   // initialise the react-hook-form
@@ -115,9 +155,7 @@ const CompanyModal = ({isShowForm, toggelForm, companyData}) => {
                                       name="profileUrl" 
                                       id="profileUrl"
                                       className='mt-0 md:mt-2'
-                                      {...register('profileUrl', {
-                                        required: 'Company Logo is Mandatory'
-                                      })}
+                                      {...register('profileUrl')}
                                       onChange={(evt) => (setProfileImg(evt.target?.files[0]))} 
                                     />
                                     {
@@ -150,11 +188,13 @@ const CompanyModal = ({isShowForm, toggelForm, companyData}) => {
                                 </div>
                                 {/* The Submit Button */}
                                 <div className='mt-2 w-full flex justify-center'>
-                                    <CustomButton 
-                                        type={'submit'} 
-                                        title={'Update'}
-                                        customBtnStyle={'inline-flex justify-center rounded-md bg-blue-600 hover:bg-blue-800 px-8 py-2 text-white text-sm font-medium outine-none'}
-                                    />
+                                  { isLoading ? 
+                                      <Loading /> 
+                                      :<CustomButton 
+                                          type={'submit'} 
+                                          title={'Update'}
+                                          customBtnStyle={'inline-flex justify-center rounded-md bg-blue-600 hover:bg-blue-800 px-8 py-2 text-white text-sm font-medium outine-none'}
+                                      />}
                                 </div>
                             </form>
 
@@ -172,11 +212,31 @@ const CompanyModal = ({isShowForm, toggelForm, companyData}) => {
 
 // Functional Component -> Company Profile
 const CompanyProfile = () => {
-  const{id} = useParams();
+  const urlParams = useParams();
   const {user} = useSelector(state => state.user);
   const[companyInfo, setCompanyInfo] = useState({});
   const[isLoading, setIsLoading] = useState(false); //Handles showing loading while fetching data..
   const[openForm, setOpenForm] = useState(false); //handles the Edit company Modal popup...
+
+  //fetch company Info...
+  const fetchCompanyData = async () => {
+    setIsLoading(true);    
+    let id = (urlParams.id && urlParams.id !== undefined ? urlParams.id : user?._id); //if id is coming in params, else take it from redux state..
+
+    try {
+      let resp = await fetchData({
+        url: 'company/companyProfile/' + id,
+        token: user?.token,
+        method: 'GET'
+      });
+      setIsLoading(false);
+      setCompanyInfo(resp?.data);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  }
+
 
   //As the Component Mount's, Based on the id, fetch the respective Company Info..
   useEffect(()=>{
@@ -185,12 +245,8 @@ const CompanyProfile = () => {
       left:0,
       behavior:'smooth'
     })
-    setIsLoading(true);
-    setTimeout(()=>{
-      setIsLoading(false);
-      setCompanyInfo(prevState => (companies.find(info => info._id == id)));
-    }, 100);
-  }, [id]);
+    fetchCompanyData();
+  }, []);
 
   return (
     isLoading ? (
@@ -207,18 +263,20 @@ const CompanyProfile = () => {
             </p>
             {/* Check wether to show edit company Profile or not */}
             {
-              user?.accountType === undefined && user?.id === companyInfo.authorId
+              user?.accountType === undefined && user?._id === companyInfo?._id
               && <div className='flex items-center justify-around gap-4'>
                 <CustomButton 
                   iconRight={<FiEdit3 />}
                   onClick={()=>setOpenForm(true)}
                   customBtnStyle={'py-2 px-3 md:px-5 focus:outline-none bg-blue-600 hover:bg-blue-700 text-white rounded text-sm md:text-base border border-blue-600'}
                 />
-                <CustomButton 
-                  title={'Upload Job'}
-                  iconRight={<FiUpload />}
-                  customBtnStyle={'py-1 px-3 md:px-5 focus:outline-none bg-blue-600 hover:bg-blue-700 text-white rounded text-sm md:text-base border border-blue-600'}
-                />
+                <Link to={'/upload-job'}>
+                  <CustomButton 
+                    title={'Upload Job'}
+                    iconRight={<FiUpload />}
+                    customBtnStyle={'py-1 px-3 md:px-5 focus:outline-none bg-blue-600 hover:bg-blue-700 text-white rounded text-sm md:text-base border border-blue-600'}
+                  />
+                </Link>
               </div>
 
             }
@@ -226,13 +284,13 @@ const CompanyProfile = () => {
           {/* Header's Info Footer bar */}
           <div className='w-full flex flex-col justify-start md:flex-row md:justify-around'>
             <p className='flex items-center gap-2 text-base md:text-lg text-gray-700'>
-              <HiLocationMarker /> {companyInfo.location}
+              <HiLocationMarker /> {companyInfo?.location ?? 'No Location'}
             </p>
             <p className='flex items-center gap-2 text-base md:text-lg text-gray-700'>
-              <AiOutlineMail /> {companyInfo.email}
+              <AiOutlineMail /> {companyInfo?.email}
             </p>
             <p className='flex items-center gap-2 text-base md:text-lg text-gray-700'>
-              <FiPhoneCall /> {companyInfo.contact}
+              <FiPhoneCall /> {companyInfo?.contact ?? 'No Contact'}
             </p>
           </div>
           {/* Job Posts info */}
@@ -243,11 +301,12 @@ const CompanyProfile = () => {
           {/* Display Job Cards */}
           <div className='w-full px-5 flex flex-col md:flex-row md:flex-wrap gap-3 md:justify-around'>
             {
-              jobs.filter(job => (companyInfo?.jobPosts?.includes(job.id))).map((job, index)=>(
-                <JobCard
-                  jobInfo={job}
-                  key={index}
-                />
+              companyInfo.jobPosts && 
+                companyInfo.jobPosts.map((job, index)=>(
+                    <JobCard
+                      jobInfo={job}
+                      key={index}
+                    />
               ))
             }
           </div>
@@ -256,7 +315,7 @@ const CompanyProfile = () => {
           <CompanyModal 
             isShowForm={openForm}
             toggelForm={setOpenForm}
-            companyData={companyInfo}
+            companyData={{...companyInfo, token: user?.token}}
           />
         </div>
       </div>

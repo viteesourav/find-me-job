@@ -148,7 +148,10 @@ const fetchJobDetailsById = async (req, res) => {
     const{id} = req.params;
 
     //if job exists
-    const job = await findJobById(id);
+    const job = await findJobById(id).populate({
+        path: 'company',
+        select: '-jobPosts'
+    });
 
     if(!job) {
         return res.status(404).json({
@@ -169,7 +172,7 @@ const fetchJobDetailsById = async (req, res) => {
     let queryRes = JobModel.find(queryObj).populate({
         path: 'company',
         select: '-jobPosts'
-    });
+    }).sort({createdAt: -1});
 
     const similarJobs = await queryRes.limit(6); // Find only 6 similar jobs.
 

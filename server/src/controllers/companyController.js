@@ -35,6 +35,7 @@ const updateCompanyProfile = async (req, res) => {
     // NOTE: We using the nullify Operator to update only the values which the user giving in the update Payload.
     // NOTE: Need to do this step only when you use .save(), Operations like findByIdAndUpdate() -> Handles it automatically.
     company.contact = contact ?? company.contact;  //Baiscally if contact is null, whatever stored paste the same [using nullify check]
+    company.name = name ?? company.name; 
     company.location = location ?? company.location;
     company.profileUrl = profileUrl ?? company.profileUrl;
     company.about = about ?? company.about;
@@ -44,7 +45,12 @@ const updateCompanyProfile = async (req, res) => {
     const resp = await company.save();
     return res.status(200).json({
         message: 'Company Info Updated Successfully',
-        company: resp
+        _id: resp._id,
+        email:resp.email,
+        name: resp.name,
+        profileUrl: resp.profileUrl,
+        jobPosts: resp.jobPosts,
+        createdAt: resp.createdAt
     }).end();
 };
 //3. fetchAllCompanies.
@@ -110,7 +116,12 @@ const fetchAllCompanies = async (req, res) => {
 const fetchCompanyInfoById = async (req, res) => {
     // Fetch the params from url.
     const{id} = req.params;
-    const companyInfo = await fetchCompanyById(id).populate('jobPosts');
+    const companyInfo = await fetchCompanyById(id).populate({
+        path: 'jobPosts',
+        populate: {
+            path: 'company'
+        }
+    });
 
     if(!companyInfo) {
         return res.status(404).json({

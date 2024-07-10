@@ -59,7 +59,7 @@ const MenuList = ({user, onClick}) => {
                 {
                   ({active}) => (
                     <Link 
-                    to={`${user?.accountType ? `/user-profile`:`/company-profile/${user?.id}`}`}
+                    to={`${user?.accountType ? `/user-profile`:`/company-profile/${user?._id}`}`}
                     className={`${active ? 'bg-blue-500 text-white' : 'text-gray-900'} flex w-full items-center rounded-md p-2 text-sm`}
                     onClick={onClick}
                     >

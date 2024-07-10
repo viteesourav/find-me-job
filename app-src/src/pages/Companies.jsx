@@ -20,7 +20,7 @@ const Companies = () => {
   //As the Component Mounts, We need to update the page's State with Company Data..
   useEffect(()=> {
     setIsFetching(true);
-    //Fetch Companys List after 3 sec..
+    //Fetch Companys List after 2 sec..
     setTimeout(()=> {
       setIsFetching(false);
       setCompanyState(prevState => ({

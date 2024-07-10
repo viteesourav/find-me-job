@@ -6,7 +6,7 @@ import { createToken, generateSalt, parsePassword } from "../utils/authHelper.js
 const register = async (req, res, next) => {
     const {
         firstName, lastName, email, password, 
-        accountType, contact, location, profileUrl, jobTitle, 
+        contact, location, profileUrl, jobTitle, 
         about
     } = req.body;
 
@@ -36,7 +36,8 @@ const register = async (req, res, next) => {
             password: parsePassword(password, salt),
             salt
         },
-        accountType,contact,location,profileUrl,jobTitle,about,
+        accountType: "seeker",
+        contact,location,profileUrl,jobTitle,about,
     });
     const token = createToken(newUser._id);
     return res.status(201).json({
@@ -45,7 +46,14 @@ const register = async (req, res, next) => {
         _id: newUser._id,
         email: newUser.email,
         firstName: newUser.firstName,
-        lastName: newUser.lastName
+        lastName: newUser.lastName,
+        accountType: newUser.accountType,
+        createdAt: newUser.createdAt,
+        profileUrl: newUser.profileUrl,
+        about: newUser.about,
+        contact: newUser.contact,
+        jobTitle: newUser.jobTitle,
+        location: newUser.location
     }).end();
 }
 
@@ -80,7 +88,14 @@ const doLogin = async (req, res, next) => {
         _id: user._id,
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
+        accountType: user.accountType,
+        createdAt: user.createdAt,
+        profileUrl: user.profileUrl,
+        about: user.about,
+        contact: user.contact,
+        jobTitle: user.jobTitle,
+        location: user.location
     }).end();
 }
 
@@ -150,7 +165,10 @@ const doCompanyLogin = async (req, res) => {
         token,
         _id: companyInfo._id,
         email:companyInfo.email,
-
+        name: companyInfo.name,
+        profileUrl: companyInfo.profileUrl,
+        jobPosts: companyInfo.jobPosts,
+        createdAt: companyInfo.createdAt
     }).end();
 }
 

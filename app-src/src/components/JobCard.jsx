@@ -5,7 +5,7 @@ import moment from 'moment'
 
 const JobCard = ({jobInfo}) => {
   return (
-    <Link to={`/job-detail/${jobInfo.id}`}>
+    <Link to={`/job-detail/${jobInfo._id}`}>
         <div className='w-full md:w-[15rem] 2xl:w-[18rem] rounded-md px-3 py-5 flex flex-col justify-between shadow-lg bg-white hover:shadow-2xl'>
             <div className='flex gap-3'>
                 <img 
@@ -26,7 +26,7 @@ const JobCard = ({jobInfo}) => {
 
             <div className='py-3'>
                 <p className='text-sm'>
-                {jobInfo?.detail[0]?.desc.slice(0, 150) + "..."}
+                {jobInfo?.about?.desc.slice(0, 150) + "..."}
                 </p>
             </div>
             <div className='flex items-center justify-between'>

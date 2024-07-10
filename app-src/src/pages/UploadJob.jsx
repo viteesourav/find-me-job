@@ -1,27 +1,89 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { CustomButton, JobType, ListBox, TextInput } from '../components'
+import { CustomButton, JobCard, JobType, ListBox, Loading, TextInput } from '../components'
+import { fetchData } from '../utils';
+import { useSelector } from 'react-redux';
 
 // Upload Job Form to post new Jobs [*** uses react-hook-form ***]
 const UploadJob = () => {
+  const {user} = useSelector(state => state.user);
   const[jobType, setJobType] = useState('Full-Time');
+  const[recentJobPosts, setRecentJobPosts] = useState([]);
   const[errMsg, setErrMsg] = useState('');
+  const[isLoading, setIsLoading] = useState(false);
+  const[isFetchingRecentJobs, setIsFetchingRecentJobs] = useState(false);
+  
+  // Handle Job Post Form...
   const {
     register,
     handleSubmit,
     getValues,
     watch,
+    reset,
     formState:{errors}
   } = useForm({
     mode:'onChange'
   })
-  const onSubmit = (frmObj) => {
-    console.log('###Form Submited Data: ', frmObj);
-    console.log('###Form State: ', getValues());
+
+  //Handle On submit of Job Post...
+  const onSubmit = async (frmObj) => {
+    setIsLoading(true);
+
+    let updatedJobPaylaod = {
+      ...frmObj, 
+      jobType,
+      desc: frmObj.description,
+      requirements: frmObj.responsibility 
+    };
+    
+    try {
+      const resp = await fetchData({
+        url: '/job/jobPosts',
+        method: 'POST',
+        data: updatedJobPaylaod,
+        token: user?.token
+      });
+      setIsLoading(false);
+      if(resp.status === 201) {
+        console.log('###Job Successfully Added');
+        fetchLoggedInCompayInfo();
+        reset();
+      }
+    } catch(err) {
+      console.log(err);
+    } finally{
+      console.log('###Form Submited Data: ', updatedJobPaylaod);
+    }
   }
+
+  //Fetch Current Company Info, with Jobs...
+  const fetchLoggedInCompayInfo = async () => {
+    let id = user && user?._id;
+
+    setIsFetchingRecentJobs(true);
+
+    let resp = await fetchData({
+      url: 'company/companyProfile/' + id,
+      method: 'GET',
+      token: user?.token
+    });
+    setIsFetchingRecentJobs(false);
+    if(resp.status == 200) {
+      console.log('###UpdatedJobProfileInfo: ', resp?.data);
+      setRecentJobPosts(resp?.data?.jobPosts);
+    } else {
+      console.log('###Error While fetching Job Details');
+    }
+  }
+
+  //Everytime the screen loads, We need to fetch the latest Job For the loggedIn Company...
+  useEffect(()=> {
+    fetchLoggedInCompayInfo();
+  }, []);
+
   return (
-    <div className='container mx-auto px-5 bg-white rounded-md mt-2 shadow-md'>
-      <div className='w-full flex flex-col py-8 gap-4'>
+    <div className='container mx-auto flex flex-col md:flex-row gap-8 xl:gap-4 px-5 mt-2'>
+      <div className='w-full md:w-2/3 xl:w-3/4 flex flex-col py-8 gap-4 bg-white rounded-md shadow-md px-4'>
         <p
           className='text-xl md:text-2xl font-semibold text-gray-500'
         >
@@ -116,7 +178,7 @@ const UploadJob = () => {
           </div>
 
           <div className='flex flex-col gap-2 justify-center'>
-            <label className='text-gray-600 text-sm mb-1' htmlFor="responsiblity">JCore Responsibility</label>
+            <label className='text-gray-600 text-sm mb-1' htmlFor="responsiblity">Core Responsibility</label>
             <textarea 
               name="responsibility" 
               placeholder='Add Job Responsibility...'
@@ -132,13 +194,36 @@ const UploadJob = () => {
           </div>
 
           <div className='w-full flex justify-center'>
-            <CustomButton 
+            {isLoading ? 
+              <Loading />
+            :<CustomButton 
               title={'POST JOB'}
               customBtnStyle={'w-fit inline-flex justify-center rounded-md bg-blue-600 hover:bg-blue-800 px-20 py-2 text-white text-sm font-medium outine-none'}
               type={'submit'}
               />
+           }
           </div>
         </form>
+      </div>
+      <div className="w-full h-fit md:w-1/3 xl:w-1/4 flex flex-col bg-white rounded-md shadow-md gap-3 py-8">
+        <p className='text-center font-semibold text-gray-600'>Recent Posts</p>
+        { 
+          isFetchingRecentJobs ? 
+            <Loading /> 
+          :recentJobPosts.length === 0 ? 
+          (
+            <div className='h-[450px] flex justify-center items-center'>
+              <p className='text-center font-semibold text-gray-400'>No Recent Job Posted</p>
+            </div>
+          )
+          : <div className='w-5/6 h-full flex flex-col gap-3 mx-auto mt-6'>
+            {
+              recentJobPosts.slice(0, 4).map((job, index)=> (
+                <JobCard jobInfo={job} key={index}/>
+              ))
+            }
+            </div>
+        }
       </div>
     </div>
   )
