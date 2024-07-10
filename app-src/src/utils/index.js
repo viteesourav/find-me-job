@@ -54,7 +54,7 @@ const updateUrl = ({
     currpageLocation,
     pageNum,
     searchQuery,
-    Joblocation,
+    joblocation,
     sort,
     jobType,
     exp
@@ -64,7 +64,7 @@ const updateUrl = ({
 
     (pageNum && pageNum > 1) && params.set("page", pageNum);
     (searchQuery) && params.set("search", searchQuery);
-    (Joblocation) && params.set("location", Joblocation);
+    (joblocation) && params.set("location", joblocation);
     (sort) && params.set("sort", sort);
     (jobType) && params.set("jobType", jobType);
     (exp) && params.set("exp", exp);

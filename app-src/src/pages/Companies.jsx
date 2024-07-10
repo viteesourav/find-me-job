@@ -11,7 +11,7 @@ const Companies = () => {
   // Holds the user action state for updating the query....
   const[companyState, setCompanyState] = useState({
     searchQuery: '',
-    cmpLocation: '',
+    joblocation: '',
   });
   
   const[companySort, setCompanySort] = useState('Newest');
@@ -34,7 +34,7 @@ const Companies = () => {
       currpageLocation: location,
       pageNum: companiesInfo.page,
       searchQuery: companyState.searchQuery,
-      Joblocation: companyState.cmpLocation,
+      joblocation: companyState.joblocation,
       sort: companySort
     });
   }
@@ -84,20 +84,23 @@ const Companies = () => {
   
   //1.Handle State changes from the Search Component..
   const handleOnSearchBarEdit = (searchKey, searchValue) => {
-    setCompanyState(prevState => {
-      let updatedState = {...prevState};
-      updatedState[searchKey] = searchValue;
-      return updatedState;
-    })
+    
     let searchPayload = {
       navigate,
       currpageLocation: location,
       pageNum: companiesInfo.page,
       searchQuery: companyState.searchQuery,
-      Joblocation: companyState.cmpLocation,
+      joblocation: companyState.joblocation,
       sort: companySort
     }
     searchPayload[searchKey] = searchValue;
+
+    setCompanyState(prevState => {
+      let updatedState = {...prevState};
+      updatedState[searchKey] = searchValue;
+      return updatedState;
+    })
+
     let newSearchUrl = updateUrl(searchPayload);
     handleSearchDebounce(newSearchUrl);
   }
@@ -124,7 +127,7 @@ const Companies = () => {
         title={'Find Your Dream Company'}
         handleClick={() => {}}
         searchQuery={companyState.searchQuery}
-        location={companyState.cmpLocation}
+        location={companyState.joblocation}
         setPageState={(key, val) => handleOnSearchBarEdit(key, val)}
         isShowSearchBtn = {false}
       />

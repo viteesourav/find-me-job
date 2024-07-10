@@ -58,7 +58,7 @@ const Header = ({title, type, handleClick, searchQuery, location, setPageState, 
                         placeholder='Add Country or State'
                         icon={<CiLocationOn className='text-gray-600 text-xl' />}
                         value={location}
-                        searchKey={'cmpLocation'}
+                        searchKey={'joblocation'}
                         setSearchValue={(key, val) => setPageState(key, val)}
                     />
                     {isShowSearchBtn && 
