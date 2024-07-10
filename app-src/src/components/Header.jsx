@@ -15,20 +15,12 @@ const SearchInput = ({placeholder, icon, value, searchKey, setSearchValue, style
                 type="text"
                 value={value}
                 placeholder={placeholder} 
-                onChange={(evt) => setSearchValue(prevState => {
-                    let newState = {...prevState};
-                    newState[searchKey] = evt.target.value;
-                    return newState;
-                })}
+                onChange={(e) => setSearchValue(searchKey, e.target.value)}
                 className='w-full p-2 outline-none bg-transparent text-base'
             />
             <AiOutlineCloseCircle 
                 className={`${value != "" ? 'flex':'hidden'} text-gray-600 text-xl cursor-pointer`}
-                onClick={()=> setSearchValue(prevState => {
-                    let newState = {...prevState};
-                    newState[searchKey] = '';
-                    return newState;
-                })}
+                onClick={()=> setSearchValue(searchKey, '')}
             />
         </div>
     )
@@ -60,14 +52,14 @@ const Header = ({title, type, handleClick, searchQuery, location, setPageState, 
                         icon={<AiOutlineSearch className='text-gray-600 text-xl' />}
                         value={searchQuery}
                         searchKey={'searchQuery'}
-                        setSearchValue={setPageState}
+                        setSearchValue={(key, val) => setPageState(key, val)}
                     />
                     <SearchInput 
                         placeholder='Add Country or State'
                         icon={<CiLocationOn className='text-gray-600 text-xl' />}
                         value={location}
                         searchKey={'cmpLocation'}
-                        setSearchValue={setPageState}
+                        setSearchValue={(key, val) => setPageState(key, val)}
                     />
                     {isShowSearchBtn && 
                         <CustomButton

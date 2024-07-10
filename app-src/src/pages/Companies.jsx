@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CompanyCard, CustomButton, Header, ListBox, Loading } from '../components';
 import { companies } from '../utils/data';
 import { fetchData, updateUrl } from '../utils';
+import debounce from 'lodash.debounce';
 
 const Companies = () => {
   const[isFetching, setIsFetching] = useState(false);
+
   // Holds the user action state for updating the query....
   const[companyState, setCompanyState] = useState({
-    sort: 'Newest',
     searchQuery: '',
     cmpLocation: '',
   });
+  
+  const[companySort, setCompanySort] = useState('Newest');
+  
   // Fetch latest data of companines as per url-query...
   const[companiesInfo, setCompanyInfo] = useState({
     data: [],
@@ -19,61 +23,99 @@ const Companies = () => {
     numPage: 1,
     recordCount: 0
   });
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  //Handles fetching companies...
-  const fetchCompanies = async () => {
-    setIsFetching(true);
-
-    //We need to update the URL with query params, Our API Needs it...
-    let url_path  = updateUrl({
+  //We need to update the URL with query params, Our API Needs it...
+  const modifyUrlPath = () => {
+    return updateUrl({
       navigate,
       currpageLocation: location,
       pageNum: companiesInfo.page,
       searchQuery: companyState.searchQuery,
       Joblocation: companyState.cmpLocation,
-      sort: companyState.sort
-    })
+      sort: companySort
+    });
+  }
 
-   try {
-     const resp = await fetchData({
-       url: url_path,
-       method: 'GET'
-     });
+  //Handles fetching companies...
+  const fetchCompanies = async (url_path) => {
+    try {
+      setIsFetching(true);
 
-     if(resp?.status === 200) {
-      setCompanyInfo(info =>({
-          ...info,
-          data: resp?.data?.companies,
-          numPage: resp?.data?.pageNo,
-          page: resp?.data?.noOfPages,
-          recordCount: resp?.data?.total
-        }));
-        console.log("###fetching Companies Info", resp);
-     } else {
+      const resp = await fetchData({
+        url: url_path,
+        method: 'GET'
+      });
+
+      if(resp?.status === 200) {
+        setCompanyInfo(info =>({
+            ...info,
+            data: resp?.data?.companies,
+            numPage: resp?.data?.pageNo,
+            page: resp?.data?.noOfPages,
+            recordCount: resp?.data?.total
+          }));
+          console.log("###fetching Companies Info", resp);
+      } else {
+          console.log("###Error While fetching Companies Info", resp);
+      }
+    } catch (error) {
         console.log("###Error While fetching Companies Info", resp);
-     }
-   } catch (error) {
-      console.log("###Error While fetching Companies Info", resp);
-   } finally {
+    } finally {
       setIsFetching(false);
       console.log('###Fetching all comapanies Info...');
-   }
+    }
+  }
+
+  //Applying the concept of DeBouncing OnSearch bar for Search Efficiency....
+  
+  //2. Now lets write a function to handle the debounce of search bar... 
+  //[It will Make the Call to fetch data, Once user stop typing in searchbar for 2s]
+  const sendReqDebounce = debounce(async(newSearchUrl) => {
+    await fetchCompanies(newSearchUrl);
+    console.log("###Handle debouncing Search");
+  }, 800);
+  
+  //3.This memorize the sendReqDeBounce Function thorugh all the Form Re-renders...
+  const handleSearchDebounce = useCallback((newSearchUrl) => sendReqDebounce(newSearchUrl),
+  []);
+  
+  //1.Handle State changes from the Search Component..
+  const handleOnSearchBarEdit = (searchKey, searchValue) => {
+    setCompanyState(prevState => {
+      let updatedState = {...prevState};
+      updatedState[searchKey] = searchValue;
+      return updatedState;
+    })
+    let searchPayload = {
+      navigate,
+      currpageLocation: location,
+      pageNum: companiesInfo.page,
+      searchQuery: companyState.searchQuery,
+      Joblocation: companyState.cmpLocation,
+      sort: companySort
+    }
+    searchPayload[searchKey] = searchValue;
+    let newSearchUrl = updateUrl(searchPayload);
+    handleSearchDebounce(newSearchUrl);
   }
 
 
   //As the Component Mounts, We need to update the page's State with Company Data..
   useEffect(()=> {
     console.log("###First time componentLoad");
-    fetchCompanies();
+    let url = modifyUrlPath();
+    fetchCompanies(url);
   }, []);
 
-  //As companyStates update like searchQry, Order or Loaction, we need to re-fetch data...
+  //As companyStates update when we change companyOrder, we need to re-fetch data...
   useEffect(()=> {
-    fetchCompanies();
+    let url = modifyUrlPath();
+    fetchCompanies(url);
     // console.log("##Rerendering");
-  }, [companyState])
+  }, [companySort])
 
   return (
     <div className='w-full bg-[#fdf7f7]'>
@@ -83,7 +125,7 @@ const Companies = () => {
         handleClick={() => {}}
         searchQuery={companyState.searchQuery}
         location={companyState.cmpLocation}
-        setPageState={setCompanyState}
+        setPageState={(key, val) => handleOnSearchBarEdit(key, val)}
         isShowSearchBtn = {false}
       />
       {/* AFter Search bar */}
@@ -98,8 +140,8 @@ const Companies = () => {
               Sort By: 
             </p>
             <ListBox
-              sort={companyState.sort}
-              setState={setCompanyState}
+              sort={companySort}
+              setState={setCompanySort}
             />
           </div>
         </div>
