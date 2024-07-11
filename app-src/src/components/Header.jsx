@@ -78,11 +78,7 @@ const Header = ({title, type, handleClick, searchQuery, location, setPageState, 
                                     <span 
                                         className='w-auto text-sm md:text-base px-4 py-2 tracking-wider text-blue-600 hover:text-blue-700 bg-blue-200 hover:bg-blue-300 rounded-full cursor-pointer' 
                                         key={id}
-                                        onClick={() => setPageState(prevState => {
-                                            let newState = {...prevState};
-                                            newState['searchQuery'] = item;
-                                            return newState;
-                                        })}
+                                        onClick={() => setPageState('searchQuery', item)}
                                     >
                                         {item}
                                     </span>

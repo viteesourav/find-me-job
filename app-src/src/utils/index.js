@@ -66,7 +66,7 @@ const updateUrl = ({
     (searchQuery) && params.set("search", searchQuery);
     (joblocation) && params.set("location", joblocation);
     (sort) && params.set("sort", sort);
-    (jobType) && params.set("jobType", jobType);
+    (jobType && jobType?.length > 0) && params.set("jobType", jobType);   //Since JobType is [], we need to check if 'JobType' key exists and if it exits, It cannot be empty []
     (exp) && params.set("exp", exp);
 
     const redirectUrl = `${currpageLocation.pathname}?${params.toString()}`;

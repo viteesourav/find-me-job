@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CustomButton, Header, JobCard, ListBox, Loading } from '../components';
 import { BiBriefcaseAlt2 } from 'react-icons/bi';
@@ -6,6 +6,7 @@ import { BsStar } from "react-icons/bs";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { jobTypes, experience, jobs} from '../utils/data';
 import { dbConnection, updateUrl } from '../utils';
+import debounce from 'lodash.debounce';
 
 const FindJobs = () => {
   const[findJobState, setFindJobState] = useState({
@@ -15,10 +16,10 @@ const FindJobs = () => {
   });
   const [searchBar, SetSearchBar] = useState({
     searchQuery: '',
-    jobLocation: ''
+    joblocation: ''
   });
+  const[pageNo, setPageNo] = useState(1);
   const[jobsInfo, setJobInfo] = useState({
-    page: 1,
     numPage: 1,
     recordCount: 0,
     data: [],
@@ -45,7 +46,6 @@ const FindJobs = () => {
           ...prevState,
           data: resp?.data?.jobs,
           numPage: resp?.data?.noOfPages,
-          page: resp?.data?.pageNo,
           recordCount: resp?.data?.total
         }))
       }
@@ -68,15 +68,52 @@ const FindJobs = () => {
     let url_path = updateUrl({
       navigate: naviagteTo,
       currpageLocation: location,
-      pageNum: findJobState.pageNum,
+      pageNum: pageNo ?? '',
+      searchQuery: searchBar.searchQuery,
+      joblocation: searchBar.joblocation,
       sort: findJobState.sort,
-      jobType: findJobState.filterJobTypes.length > 0 ? findJobState.filterJobTypes.join(',') : '',
+      jobType: findJobState.filterJobTypes.length > 0 ? findJobState.filterJobTypes.join(',') : [],
       exp: findJobState.filterExp
     });
     fetchJobs(url_path);
-  }, [findJobState])
+  }, [findJobState, pageNo])
 
-  //TODO: Implement DeBounce search For the search Bar...
+  //Implementing De-Bounce Search Functionality for the Job Search Bar....\
+  //2. Write the debounce method from lodash...
+  const fetchBasedOnSearchParams = debounce(async (url_path) => {
+    await fetchJobs(url_path);
+    console.log('###Call to fetch updated Data based on Search Query');
+  }, 800);
+
+  //3. Optimise the debounce function through multiple component re-renders --> useCallback [preserve the reference of the function]
+  const handleDebounceSearch =  useCallback((url_path) => fetchBasedOnSearchParams(url_path), 
+  []);
+
+  //1.handle and update the search state change of the searchBar...
+  const handleSearchbarState = (searchKey, searchVal) => {
+    SetSearchBar(prev => {
+      let updatedSearchState = {...prev};
+      updatedSearchState[searchKey] = searchVal;
+      return updatedSearchState;
+    })
+    
+    //Prepare the url with queryParams and then send it to debounceSearch...
+    let queryParamsPayload = {
+      navigate: naviagteTo, 
+      currpageLocation: location, 
+      pageNum: jobsInfo.numPage,
+      searchQuery: searchBar.searchQuery, 
+      joblocation: searchBar.joblocation,
+      sort: findJobState.sort, 
+      jobType: findJobState.filterJobTypes.length > 0 ? findJobState.filterJobTypes.join(',') : [], 
+      exp: findJobState.filterExp
+    };
+
+    queryParamsPayload[searchKey] = searchVal;
+
+    let updatedUrl = updateUrl(queryParamsPayload);
+    handleDebounceSearch(updatedUrl);
+  }
 
   //Handle, On JobType/experience CheckBox Selection...[//under evt.target -> checked [true/false] and value holds the checked value.]
   //check if the checked value is already present in the filtereJobTypes, If yes -> Remove it, If not add it.
@@ -106,9 +143,9 @@ const FindJobs = () => {
         title='Find Your Dream Job'
         type='home'
         handleClick={()=> {}}
-        searchQuery={findJobState.searchQuery}
-        location={findJobState.jobLocation}
-        setPageState={setFindJobState}
+        searchQuery={searchBar.searchQuery}
+        location={searchBar.joblocation}
+        setPageState={(key, val) => handleSearchbarState(key, val)}
         isShowSearchBtn = {false}
       />
       
@@ -205,17 +242,18 @@ const FindJobs = () => {
               {
                 isFetching ? <Loading /> 
                 : jobsInfo.data.map((jobData) => (
-                    <JobCard jobInfo={jobData} key={jobData.id}/>
+                    <JobCard jobInfo={jobData} key={jobData._id}/>
                   ))
               }
             </div>
             {/* LoadMore Jobs Btn */}
             {
-              jobsInfo.page > jobsInfo.numPage && !isFetching &&
+              pageNo < jobsInfo.numPage && !isFetching &&
               <div className='w-full flex items-center justify-center pt-14'>
                 <CustomButton
                   title={'Load More'}
-                  customBtnStyle={'text-blue-600 bg-blue-100 text-xs px-10 py-1.5 rounded-full border border-blue-500 focus:outline-none hover:bg-blue-700 hover:text-white'}
+                  customBtnStyle={'text-black bg-blue-500 text-xs px-6 py-1.5 rounded-md border border-blue-500 focus:outline-none hover:bg-blue-700 hover:text-white'}
+                  onClick={() => setPageNo(prev => prev+1)}
                 />
 
               </div>

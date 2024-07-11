@@ -125,7 +125,7 @@ const fetchJobs = async (req, res) => {
     // Pagination...
     const totalJobs = await JobModel.countDocuments(queryResp); //Retruns the count of all Jobs with including above filters.
     const pageNo = page ?? 1;
-    const maxRecords = limit ?? 20;
+    const maxRecords = limit ?? 1;
     const noOfPages = Math.ceil(totalJobs/maxRecords);
 
     queryResp = queryResp.limit(pageNo * maxRecords);
