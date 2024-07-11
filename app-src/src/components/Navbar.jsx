@@ -113,7 +113,7 @@ const Navbar = () => {
           {/* Nav Menu Options to display */}
           <ul className='hidden lg:flex gap-10 text-base'>
             <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
-              <Link to='/find-jobs'>Find Jobs</Link>
+              <Link to='/job/jobPosts'>Find Jobs</Link>
             </li>
             <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to={'/company/getAll'}>Companies</Link>
@@ -163,7 +163,7 @@ const Navbar = () => {
         className={`${isOpen ? 'absolute flex bg-white' : 'hidden'} container mx-auto lg:hidden flex-col pl-8 gap-3 py-5`}
         >
           {/* Note: Here the OnCLick Close the DropDown as soon as You click on the Link */}
-          <Link to={'/find-jobs'} onClick={handleOnNavClose}>Find Jobs</Link>  
+          <Link to={'/job/jobPosts'} onClick={handleOnNavClose}>Find Jobs</Link>  
           <Link to={'/company/getAll'} onClick={handleOnNavClose}>Companies</Link>
           <Link to={'/upload-jobs'} onClick={handleOnNavClose}>Upload Jobs</Link>    
           <Link to={'/about-us'} onClick={handleOnNavClose}>About Us</Link> 

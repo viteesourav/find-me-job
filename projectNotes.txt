@@ -115,3 +115,8 @@ Notable Features of Components:
       - isCompany [Validates if the authorId extracted from the token belongs to a company or User, use for Restricting API calls to Company Only]
 
 3) Integration of FrontEnd and Backend using APIs
+
+NOTE: 3 things handling page to page Navigation and previous Page Naviagtion
+   1. The Route, Outlet and Naviagate Structure Code in App.jsx
+   2. The use of useLoaction() to fetch curr Page location.
+   3. using window.location.replace(newurl) OR navigate(newurl, {replace: true}) [from useNavigation()] 

@@ -10,7 +10,7 @@ import { FiPhoneCall } from 'react-icons/fi';
 import { useForm } from 'react-hook-form'
 import { Dialog, Transition } from '@headlessui/react';
 import { CgClose } from "react-icons/cg";
-import { fetchData, handleFileUploads } from '../utils';
+import { dbConnection, handleFileUploads } from '../utils';
 import { login } from '../redux/userSlice';
 
 //Function Component -> Show Compnay Info Edit Modal [Popup] [*** NOTE: Handled the image upload and storing image using cloudinary ***]
@@ -31,7 +31,7 @@ const CompanyModal = ({isShowForm, toggelForm, companyData}) => {
 
     //handle API call to update company-profile Info...
     try {
-      const res = await fetchData({
+      const res = await dbConnection({
         url: 'company/companyProfile',
         data: updatePayload,
         method: 'PUT',
@@ -224,7 +224,7 @@ const CompanyProfile = () => {
     let id = (urlParams.id && urlParams.id !== undefined ? urlParams.id : user?._id); //if id is coming in params, else take it from redux state..
 
     try {
-      let resp = await fetchData({
+      let resp = await dbConnection({
         url: 'company/companyProfile/' + id,
         token: user?.token,
         method: 'GET'

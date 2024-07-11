@@ -1,54 +1,102 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { CustomButton, Header, JobCard, ListBox } from '../components';
+import { CustomButton, Header, JobCard, ListBox, Loading } from '../components';
 import { BiBriefcaseAlt2 } from 'react-icons/bi';
 import { BsStar } from "react-icons/bs";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { jobTypes, experience, jobs} from '../utils/data';
+import { dbConnection, updateUrl } from '../utils';
 
 const FindJobs = () => {
   const[findJobState, setFindJobState] = useState({
     sort: 'Newest',
+    filterJobTypes: [],
+    filterExp: ''
+  });
+  const [searchBar, SetSearchBar] = useState({
+    searchQuery: '',
+    jobLocation: ''
+  });
+  const[jobsInfo, setJobInfo] = useState({
     page: 1,
     numPage: 1,
     recordCount: 0,
     data: [],
-    searchQuery: '',
-    jobLocation: '',
-    filterJobTypes: [],
-    filterExp: []
-  })
+  });
   const[isFetching, setIsFetching] = useState(false);
 
   const location = useLocation();
-  const naviagte = useNavigate();
+  const naviagteTo = useNavigate();
+
+  //Handle Fetching latest Jobs from server...[based on query Params]
+  const fetchJobs = async (url) => {
+    try {
+      setIsFetching(true);
+      
+      const resp = await dbConnection({
+        url,
+        method: 'GET'
+      })
+      setIsFetching(false);
+
+      if(resp?.status === 200) {
+        console.log("###Fetch Jobs Successful", resp);
+        setJobInfo(prevState => ({
+          ...prevState,
+          data: resp?.data?.jobs,
+          numPage: resp?.data?.noOfPages,
+          page: resp?.data?.pageNo,
+          recordCount: resp?.data?.total
+        }))
+      }
+    } catch (error) {
+      console.log("###Error while Fetching Jobs", error);
+    } finally {
+      console.log("###Fetching Latest Jobs");
+    }
+  }
+
 
   // As the component Mounts, Fetch the Job data from the server...
   useEffect(()=> {
-    setFindJobState(prevState => ({
-      ...prevState,
-      data: jobs ? jobs : []
-    }))
+    let url_path = location.pathname;
+    fetchJobs(url_path);
   }, []);
+
+  //As the user toggels the checkbox with jobTypes, exp and Sort ---> fetch the updated job List...
+  useEffect(()=> {
+    let url_path = updateUrl({
+      navigate: naviagteTo,
+      currpageLocation: location,
+      pageNum: findJobState.pageNum,
+      sort: findJobState.sort,
+      jobType: findJobState.filterJobTypes.length > 0 ? findJobState.filterJobTypes.join(',') : '',
+      exp: findJobState.filterExp
+    });
+    fetchJobs(url_path);
+  }, [findJobState])
+
+  //TODO: Implement DeBounce search For the search Bar...
 
   //Handle, On JobType/experience CheckBox Selection...[//under evt.target -> checked [true/false] and value holds the checked value.]
   //check if the checked value is already present in the filtereJobTypes, If yes -> Remove it, If not add it.
-  const handleOnFilterTypeSelect = (evt, fieldName) => {
-    if(findJobState[fieldName].includes(evt.target.value)) {
-      //Already Present, Remove it from the list...
-      setFindJobState(prevState => {
-        let newObj = {...prevState};
-        newObj[fieldName] = prevState[fieldName].filter(val => (val !== evt.target.value));
-        return newObj;
-      })
-    } else {
-      //Not Present, add it to the list..
-      setFindJobState(prevState => {
-        let newObj = {...prevState};
-        newObj[fieldName] = [...prevState[fieldName], evt.target.value];
-        return newObj;
-      })
+  const handleOnFilterTypeSelect = evt => {
+    console.log("###Event: ", evt);
+    let updatedJobTypeFilter = [];
+      
+    //So, If a checkbox is unchecked and filteredJobType used to Hold that Value ---> Remove that the val from list...
+    if(!evt.target.checked && findJobState.filterJobTypes.includes(evt.target.value)) {
+      updatedJobTypeFilter = findJobState.filterJobTypes.filter(ele => ele !== evt.target.value);
     }
+    //So, If a checkbox is checked and filteredJobType doesn't Hold that Value ---> Add that val to the list...
+    if(evt.target.checked && !findJobState.filterJobTypes.includes(evt.target.value)) {
+      updatedJobTypeFilter = [...findJobState.filterJobTypes, evt.target.value]
+    }
+
+    setFindJobState(prev => ({
+      ...prev,
+      filterJobTypes: updatedJobTypeFilter
+    }))
   }
 
   return (
@@ -61,7 +109,7 @@ const FindJobs = () => {
         searchQuery={findJobState.searchQuery}
         location={findJobState.jobLocation}
         setPageState={setFindJobState}
-        isShowSearchBtn = {true}
+        isShowSearchBtn = {false}
       />
       
       {/* The Main Container */}
@@ -92,7 +140,7 @@ const FindJobs = () => {
                       type="checkbox" 
                       value={jobName}
                       className='w-5 h-5'
-                      onChange={(evt) => handleOnFilterTypeSelect(evt, 'filterJobTypes')}
+                      onChange={(evt) => handleOnFilterTypeSelect(evt)}
                     />
                     <span>{jobName}</span>
                   </div>
@@ -118,10 +166,14 @@ const FindJobs = () => {
                 experience.map((exp, id) => (
                   <div className='flex items-center justify-start gap-2 text-base md:text-lg' key={id}>
                     <input 
-                      type="checkbox" 
+                      type="checkbox"
                       value={exp?.value}
                       className='w-5 h-5'
-                      onChange={(evt) => handleOnFilterTypeSelect(evt, 'filterExp')}
+                      checked = {findJobState.filterExp === exp?.value}
+                      onChange={(evt) => evt?.target?.value === findJobState.filterExp ? 
+                        setFindJobState(prev => ({...prev, filterExp: ''})) : 
+                         setFindJobState(prev => ({...prev, filterExp: exp?.value}))
+                        }
                     />
                     <span>{exp.title}</span>
                   </div>
@@ -135,7 +187,7 @@ const FindJobs = () => {
             {/* The main container Header */}
             <div className="w-full h-fit flex justify-between mb-4 items-center">
                 <p className='text-lg md:text-xl'>
-                  Showing: <span className='font-semibold'>1902</span> Jobs Available
+                  Showing: <span className='font-semibold'>{jobsInfo.recordCount}</span> Jobs Available
                 </p>
                 <div className='flex flex-row gap-0 md:gap-2 px-4 items-center'>
                   <p className='text-lg md:text-xl'>
@@ -143,7 +195,7 @@ const FindJobs = () => {
                   </p>
                   <ListBox
                     sort={findJobState.sort}
-                    setState={setFindJobState}
+                    setState={(val) => setFindJobState(prev => ({...prev, sort: val}))}
                   />
                 </div>
             </div>
@@ -151,14 +203,15 @@ const FindJobs = () => {
             {/* Jobs Cards Container */}
             <div className="w-full flex flex-wrap gap-2 md:gap-4 justify-around">
               {
-                findJobState.data.map((jobData) => (
-                  <JobCard jobInfo={jobData} key={jobData.id}/>
-                ))
+                isFetching ? <Loading /> 
+                : jobsInfo.data.map((jobData) => (
+                    <JobCard jobInfo={jobData} key={jobData.id}/>
+                  ))
               }
             </div>
             {/* LoadMore Jobs Btn */}
             {
-              findJobState.page > findJobState.numPage && !isFetching &&
+              jobsInfo.page > jobsInfo.numPage && !isFetching &&
               <div className='w-full flex items-center justify-center pt-14'>
                 <CustomButton
                   title={'Load More'}

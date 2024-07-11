@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import TextInput from './TextInput'
 import CustomButton from './CustomButton'
-import { fetchData } from '../utils/index.js'
+import { dbConnection } from '../utils/index.js'
 import { login } from '../redux/userSlice.js'
 
 const SignUp = ({open, setOpen}) => {
@@ -32,7 +32,7 @@ const SignUp = ({open, setOpen}) => {
                 accountType === 'seeker' ? 'user/login' : 'company/login'
             ));
             
-            const resp = await fetchData({
+            const resp = await dbConnection({
                 url: url_path,
                 method: "POST",
                 data: {

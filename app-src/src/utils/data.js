@@ -10,24 +10,26 @@ import {
     CodeWave,
   } from "../assets";
   
-  export const jobTypes = ["Full-Time", "Part-Time", "ContracT", "Intern"];
+  export const jobTypes = ["Full-Time", "Part-Time", "Contract", "Intern"];
   
   export const experience = [
     { title: "Under 1 Year", value: "0-1" },
     { title: "1 -2 Year", value: "1-2" },
     { title: "2 -6 Year", value: "2-6" },
-    { title: "Over 6 Years", value: "6" },
+    { title: "Over 6 Years", value: "6-20" },
   ];
   
   export const popularSearch = [
+    "React Developer",
     "Software Engineer",
-    "Developer",
+    "Java Developer",
     "Full-Stack Developer",
-    "Data Scientist",
-    "Remote",
-    "Full-Time",
-    "Sales",
-    "Office Assistant",
+    "MERN Developer",
+    "Cloud Engineer",
+    "Devops Engineer",
+    "Backend Developer",
+    "System Engineer",
+    "Test Engineer"
   ];
   
   export const jobs = [

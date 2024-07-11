@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { jobs } from '../utils/data'
 import { FaHeartBroken } from "react-icons/fa";
 import moment from 'moment'
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
-import { CustomButton, JobCard } from '../components'
-import { fetchData } from '../utils';
+import { CustomButton, JobCard, Loading } from '../components'
+import { dbConnection } from '../utils';
 import { useSelector } from 'react-redux';
 import { FaMapLocationDot } from 'react-icons/fa6';
 import { MdEmail } from 'react-icons/md';
@@ -23,7 +23,7 @@ const JobDetail = () => {
   const fetchJobDetaial = async () => {
     setIsLoading(true);
 
-    const resp = await fetchData({
+    const resp = await dbConnection({
       url: 'job/jobPosts/' + id,
       method: 'GET',
       token: user?.token
@@ -43,15 +43,43 @@ const JobDetail = () => {
     }
   };
 
+  //Handle Deleting a JOB POST...
+  const handleOneDeletePostClick = async() => {
+    if(id && window.confirm("Are you sure you want to delete the post ?")) {
+      try {
+        setIsLoading(true);
+        
+        const resp = await dbConnection({
+          url: `job/jobPosts/${id}`,
+          method: 'DELETE',
+          token: user?.token
+        });
+  
+        setIsLoading(false);
+  
+        if(resp?.status === 200) {
+          window.location.replace('/'); //Once Deleted Successfully --> Go to HomePage...
+          console.log('###Job Post Deleted successfully');
+        }
+      } catch (error) {
+        console.log('###Error While Deleting JobPost', error);
+      } finally {
+        console.log("###Deleting Currrent Job Posts");
+      }
+    }
+  }
+
   // As the component Mounts, We will fetch the job details based on the id
   useEffect(()=> {
     fetchJobDetaial();
     window.scrollTo({top: '0', left:'0', behavior:'smooth'});
-  }, []);
+  }, [id]);
   //useEffect should trigger re-load everytime the id is updated -> It will update the JobInfo
   // console.log('###JOb_details: ', jobInfo);
   
   return (
+    isLoading ? 
+      <Loading /> :
     jobInfo ? (
     <div className='container mx-auto'>
       <div className="flex w-[90%] flex-col md:flex-row gap-5 mx-auto">
@@ -133,11 +161,18 @@ const JobDetail = () => {
                   </span>
                 </div>
                 <div className='w-full flex flex-col md:flex-row gap-2 items-center justify-between'>
-                  <CustomButton
-                    title={'Apply Now'}
-                    customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl bg-black text-white border border-transparent hover:shadow-xl`}
+                  {
+                    (user?._id !== jobInfo?.company?._id) ? 
+                        <CustomButton
+                          title={'Apply Now'}
+                          customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl bg-black text-white border border-transparent hover:shadow-xl`}
+                        /> :
+                        <CustomButton
+                          title={'Delete Post'}
+                          onClick={handleOneDeletePostClick}
+                          customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl text-white border border-transparent hover:shadow-xl bg-red-400 hover:bg-red-500`}
                   />
-                  
+                  }
                 </div>
               </div>
             ) : (

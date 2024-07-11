@@ -16,8 +16,8 @@ function App() {
       <Navbar />
       <Routes>
         <Route element = {<Layout />}>
-          <Route path="/" element={<Navigate to={'/find-jobs'} replace />} />
-          <Route path='/find-jobs' element={<FindJobs />} />
+          <Route path="/" element={<Navigate to={'/job/jobPosts'} replace />} />
+          <Route path='/job/jobPosts' element={<FindJobs />} />
           <Route path='/company/getAll' element={<Companies />} />
           {/* <Route path={
             user?.accountType === 'Seeker' ? '/user-profile' : '/user-profile/:id'

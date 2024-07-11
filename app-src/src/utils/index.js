@@ -7,7 +7,7 @@ const API_Instance = axios.create({
 })
 
 //handles backend service calls...
-const fetchData = async ({url, method, data, token}) => {
+const dbConnection = async ({url, method, data, token}) => {
     try {
         const resp = await API_Instance({
             url,
@@ -71,13 +71,13 @@ const updateUrl = ({
 
     const redirectUrl = `${currpageLocation.pathname}?${params.toString()}`;
     
-    navigate(redirectUrl, {replace: true});
+    navigate(redirectUrl, {replace: true});  //you naviagte to the destination page..
 
     return redirectUrl;
 }
 
 export {
-    fetchData,
+    dbConnection,
     handleFileUploads,
     updateUrl
 }

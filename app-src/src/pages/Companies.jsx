@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CompanyCard, CustomButton, Header, ListBox, Loading } from '../components';
 import { companies } from '../utils/data';
-import { fetchData, updateUrl } from '../utils';
+import { dbConnection, updateUrl } from '../utils';
 import debounce from 'lodash.debounce';
 
 const Companies = () => {
@@ -44,7 +44,7 @@ const Companies = () => {
     try {
       setIsFetching(true);
 
-      const resp = await fetchData({
+      const resp = await dbConnection({
         url: url_path,
         method: 'GET'
       });
@@ -71,14 +71,14 @@ const Companies = () => {
 
   //Applying the concept of DeBouncing OnSearch bar for Search Efficiency....
   
-  //2. Now lets write a function to handle the debounce of search bar... 
+  //3. Now lets write a function to handle the debounce of search bar... 
   //[It will Make the Call to fetch data, Once user stop typing in searchbar for 2s]
   const sendReqDebounce = debounce(async(newSearchUrl) => {
     await fetchCompanies(newSearchUrl);
     console.log("###Handle debouncing Search");
   }, 800);
   
-  //3.This memorize the sendReqDeBounce Function thorugh all the Form Re-renders...
+  //2.This memorize the sendReqDeBounce Function thorugh all the Form Re-renders...
   const handleSearchDebounce = useCallback((newSearchUrl) => sendReqDebounce(newSearchUrl),
   []);
   
@@ -95,12 +95,14 @@ const Companies = () => {
     }
     searchPayload[searchKey] = searchValue;
 
+    //Updating the search Input State Variables.....
     setCompanyState(prevState => {
       let updatedState = {...prevState};
       updatedState[searchKey] = searchValue;
       return updatedState;
     })
 
+    //Getting a new URL for the debouncing feature For the Search Bar...
     let newSearchUrl = updateUrl(searchPayload);
     handleSearchDebounce(newSearchUrl);
   }

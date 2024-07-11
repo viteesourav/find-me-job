@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { CustomButton, JobCard, JobType, ListBox, Loading, TextInput } from '../components'
-import { fetchData } from '../utils';
+import { dbConnection } from '../utils';
 import { useSelector } from 'react-redux';
 
 // Upload Job Form to post new Jobs [*** uses react-hook-form ***]
@@ -37,7 +37,7 @@ const UploadJob = () => {
     };
     
     try {
-      const resp = await fetchData({
+      const resp = await dbConnection({
         url: '/job/jobPosts',
         method: 'POST',
         data: updatedJobPaylaod,
@@ -62,7 +62,7 @@ const UploadJob = () => {
 
     setIsFetchingRecentJobs(true);
 
-    let resp = await fetchData({
+    let resp = await dbConnection({
       url: 'company/companyProfile/' + id,
       method: 'GET',
       token: user?.token
