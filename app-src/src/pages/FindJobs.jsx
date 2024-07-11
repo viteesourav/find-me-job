@@ -101,7 +101,7 @@ const FindJobs = () => {
     let queryParamsPayload = {
       navigate: naviagteTo, 
       currpageLocation: location, 
-      pageNum: jobsInfo.numPage,
+      pageNum: pageNo ?? '',
       searchQuery: searchBar.searchQuery, 
       joblocation: searchBar.joblocation,
       sort: findJobState.sort, 
@@ -224,7 +224,7 @@ const FindJobs = () => {
             {/* The main container Header */}
             <div className="w-full h-fit flex justify-between mb-4 items-center">
                 <p className='text-lg md:text-xl'>
-                  Showing: <span className='font-semibold'>{jobsInfo.recordCount}</span> Jobs Available
+                  Showing: <span className='font-semibold text-base'>{pageNo === jobsInfo.numPage ? `${jobsInfo.recordCount}` : `${jobsInfo.data.length} of ${jobsInfo.recordCount}`}</span> <span className='text-base'>Recently Posted Jobs</span>
                 </p>
                 <div className='flex flex-row gap-0 md:gap-2 px-4 items-center'>
                   <p className='text-lg md:text-xl'>
@@ -252,7 +252,7 @@ const FindJobs = () => {
               <div className='w-full flex items-center justify-center pt-14'>
                 <CustomButton
                   title={'Load More'}
-                  customBtnStyle={'text-black bg-blue-500 text-xs px-6 py-1.5 rounded-md border border-blue-500 focus:outline-none hover:bg-blue-700 hover:text-white'}
+                  customBtnStyle={'text-black bg-gray-200 text-xs px-12 py-1.5 rounded-full border border-black focus:outline-none hover:bg-gray-300 hover:font-semibold'}
                   onClick={() => setPageNo(prev => prev+1)}
                 />
 
