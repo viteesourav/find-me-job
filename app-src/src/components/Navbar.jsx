@@ -9,6 +9,7 @@ import CustomButton from './CustomButton';
 import { users } from '../utils/data'
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/userSlice.js';
+import { DummyProfilePic } from '../assets';
 
 //creating a Menu List for the user to see options when loggedin
 //NOTE: The below is a component that is internally used in this screen only [that's why no seperate component for this]
@@ -29,14 +30,14 @@ const MenuList = ({user, onClick}) => {
           <Menu.Button className='inline-flex gap-2 w-full rounded-md bg-white md:px-4 py-2 text-sm font-medium text-slate-700 hover:bg-opacity-20'>
             <div className='leading-[80px] flex flex-col items-start'>
               <p className='text-sm font-semibold'> 
-                { user?.firstName ?? user?.name } 
+                { (user.accountType && user.accountType === 'seeker') ? `${user?.firstName} ${user?.lastName}` : user?.name } 
               </p>
               <span className='text-sm text-blue-600'>
                 { user?.jobTitle ?? user?.email}
               </span>
             </div>
             <img className='w-10 h-10 rounded-full object-cover' 
-                src={user?.profileUrl} 
+                src={user?.profileUrl ?? DummyProfilePic}
                 alt='user Profile img' />
             <BiChevronDown className='h-8 w-8 text-slate-600' aria-hidden />
           </Menu.Button>

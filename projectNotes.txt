@@ -120,3 +120,20 @@ NOTE: 3 things handling page to page Navigation and previous Page Naviagtion
    1. The Route, Outlet and Naviagate Structure Code in App.jsx
    2. The use of useLoaction() to fetch curr Page location.
    3. using window.location.replace(newurl) OR navigate(newurl, {replace: true}) [from useNavigation()] 
+
+
+Login Creds:
+
+For Company: 
+   test@exp12344.com/12345678
+   test@exp224123.com/12345678
+For User: 
+   testuser@gmail.com/12345678
+
+   
+** Bugs: 
+
+   1) When the token Expires, Just the '/' page opens, Others are not loading., 
+      -- The Home page should make the user login again.
+   2) A Company can Apply in the Other Companies Jobs. [Restrict it to Just Seekers Only]
+   3) Seeker Job Apply and Company View Job Application Functionality.

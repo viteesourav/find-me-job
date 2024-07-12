@@ -252,7 +252,7 @@ const FindJobs = () => {
               <div className='w-full flex items-center justify-center pt-14'>
                 <CustomButton
                   title={'Load More'}
-                  customBtnStyle={'text-black bg-gray-200 text-xs px-12 py-1.5 rounded-full border border-black focus:outline-none hover:bg-gray-300 hover:font-semibold'}
+                  customBtnStyle={'text-black bg-gray-200 text-xs px-12 py-1.5 rounded-full border border-black focus:outline-none hover:bg-gray-300 font-semibold'}
                   onClick={() => setPageNo(prev => prev+1)}
                 />
 

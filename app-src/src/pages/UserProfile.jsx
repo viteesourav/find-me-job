@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { CgClose } from 'react-icons/cg';
 import { CustomButton, TextInput } from '../components';
+import { DummyProfilePic } from '../assets';
 
 // Renders the Edit form For user Profile Update...
 const UserModal = ({isModalOpen, setIsModalOpen, userObj}) => {
@@ -183,7 +184,7 @@ const UserProfile = () => {
      <div className='w-full flex flex-col gap-1 bg-[#fdf7f7] px-10 py-8 rounded-md shadow-lg mx-20'>
       <div className='w-full flex flex-col items-center md:flex-row md:justify-center gap-2 py-2 border border-x-transparent border-t-transparent border-b-2 border-b-gray-400 outline-none rounded-bl-sm rounded-br-sm'>
         <img 
-          src={user?.profileUrl} 
+          src={user?.profileUrl ?? DummyProfilePic} 
           alt={user?.firstName +" "+ user?.lastName} 
           className='w-20 h-20 rounded-full m-2'
         />
@@ -197,18 +198,21 @@ const UserProfile = () => {
       </div>
       <div className='w-full flex flex-row justify-between items-center'>
         <p className=' flex items-center gap-2 text-base md:text-lg text-gray-700'>
-          <HiLocationMarker /> {user?.location}
+          <HiLocationMarker className={user?.location ?? 'text-gray-400'} /> {user?.location ?? <span className='text-base text-gray-400'> No Location </span>}
         </p>
         <p className=' flex items-center gap-2 text-base md:text-lg text-gray-700'>
-          <AiOutlineMail /> {user?.email}
+          <AiOutlineMail className={user?.location ?? 'text-gray-400'} /> {user?.email ?? <span className='text-base text-gray-400'> No Email </span>}
         </p>
         <p className=' flex items-center gap-2 text-base md:text-lg text-gray-700'>
-          <FiPhoneCall /> {user?.contact}
+          <FiPhoneCall className={user?.location ?? 'text-gray-400'} /> {user?.contact ?? <span className='text-base text-gray-400'> No Contact </span>}
         </p>
       </div>
-      <span className='w-fit mt-5 text-xl mb-2 font-semibold text-blue-600 tracking-wider leading-4'>About</span>
+      <span className='w-fit my-12 text-xl xl:text-2xl mb-2 font-semibold text-blue-600 tracking-wider leading-4'>About</span>
       <p className='w-full mb-2 text-sm md:text-base text-gray-700'>
-        {user?.about}
+        {user?.about ?? 
+          <span className='text-base text-gray-400'> 
+            Tell Us Something About Yourself 😁 
+          </span> }
       </p>
      </div>      
 
