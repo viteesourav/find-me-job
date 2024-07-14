@@ -10,8 +10,8 @@ import { FiPhoneCall } from 'react-icons/fi';
 import { useForm } from 'react-hook-form'
 import { Dialog, Transition } from '@headlessui/react';
 import { CgClose } from "react-icons/cg";
-import { dbConnection, handleFileUploads } from '../utils';
-import { login } from '../redux/userSlice';
+import { ERROR_CODES, dbConnection, handleFileUploads } from '../utils';
+import { login, logout } from '../redux/userSlice';
 
 //Function Component -> Show Compnay Info Edit Modal [Popup] [*** NOTE: Handled the image upload and storing image using cloudinary ***]
 const CompanyModal = ({isShowForm, toggelForm, companyData}) => {
@@ -49,8 +49,9 @@ const CompanyModal = ({isShowForm, toggelForm, companyData}) => {
         
         console.log('####Update Successful', res);  
         setTimeout(()=> window.location.reload(), 1500); //reload the current Page...
-      } else {
+      } else if(ERROR_CODES.includes(res?.response?.status)) {
         console.log('###Internal Error: ',res);
+        dispatch(logout());
       }
       closeModal(true);
     } catch (error) {
@@ -218,6 +219,8 @@ const CompanyProfile = () => {
   const[isLoading, setIsLoading] = useState(false); //Handles showing loading while fetching data..
   const[openForm, setOpenForm] = useState(false); //handles the Edit company Modal popup...
 
+  const dispatch = useDispatch();
+  
   //fetch company Info...
   const fetchCompanyData = async () => {
     setIsLoading(true);    
@@ -230,7 +233,11 @@ const CompanyProfile = () => {
         method: 'GET'
       });
       setIsLoading(false);
-      setCompanyInfo(resp?.data);
+      if(resp?.status === 200) {
+        setCompanyInfo(resp?.data)
+      } else if(ERROR_CODES.includes(resp?.response?.status)) {
+        dispatch(logout());
+      }
     } catch (error) {
       setIsLoading(false);
       console.log(error);

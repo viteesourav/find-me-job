@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+//const Error Codes Handling...
+const ERROR_CODES = [
+    401,
+    403
+]
+
 //create a Axios Instance...
 const API_Instance = axios.create({
     baseURL: 'http://localhost:8080/api-v1/',
@@ -18,13 +24,11 @@ const dbConnection = async ({url, method, data, token}) => {
                 "Authorization": token ? `Bearer ${token}` : ''
             }
         });
+
         return resp;
     } catch (err) {
-        console.log('###Error while fetching data', err);
-        return {
-            err,
-            msg: err?.response?.data?.message
-        };
+        console.log('###Error while fetching data', err?.message);
+        return err;
     }
 }
 
@@ -79,5 +83,6 @@ const updateUrl = ({
 export {
     dbConnection,
     handleFileUploads,
-    updateUrl
+    updateUrl,
+    ERROR_CODES
 }

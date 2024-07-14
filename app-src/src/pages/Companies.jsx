@@ -2,8 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CompanyCard, CustomButton, Header, ListBox, Loading } from '../components';
 import { companies } from '../utils/data';
-import { dbConnection, updateUrl } from '../utils';
+import { ERROR_CODES, dbConnection, updateUrl } from '../utils';
 import debounce from 'lodash.debounce';
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/userSlice';
 
 const Companies = () => {
   const[isFetching, setIsFetching] = useState(false);
@@ -26,6 +28,7 @@ const Companies = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   //We need to update the URL with query params, Our API Needs it...
   const modifyUrlPath = () => {
@@ -58,6 +61,8 @@ const Companies = () => {
             recordCount: resp?.data?.total
           }));
           console.log("###fetching Companies Info", resp);
+      } else if(ERROR_CODES.includes(resp?.response?.status)) {
+        dispatch(logout());
       } else {
           console.log("###Error While fetching Companies Info", resp);
       }

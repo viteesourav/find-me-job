@@ -5,8 +5,10 @@ import { BiBriefcaseAlt2 } from 'react-icons/bi';
 import { BsStar } from "react-icons/bs";
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { jobTypes, experience, jobs} from '../utils/data';
-import { dbConnection, updateUrl } from '../utils';
+import { ERROR_CODES, dbConnection, updateUrl } from '../utils';
 import debounce from 'lodash.debounce';
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/userSlice';
 
 const FindJobs = () => {
   const[findJobState, setFindJobState] = useState({
@@ -28,6 +30,7 @@ const FindJobs = () => {
 
   const location = useLocation();
   const naviagteTo = useNavigate();
+  const dispatch = useDispatch();
 
   //Handle Fetching latest Jobs from server...[based on query Params]
   const fetchJobs = async (url) => {
@@ -48,6 +51,8 @@ const FindJobs = () => {
           numPage: resp?.data?.noOfPages,
           recordCount: resp?.data?.total
         }))
+      } else if(ERROR_CODES.includes(resp?.response?.status)) {
+        dispatch(logout());
       }
     } catch (error) {
       console.log("###Error while Fetching Jobs", error);

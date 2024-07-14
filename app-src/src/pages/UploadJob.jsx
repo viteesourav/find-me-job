@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { CustomButton, JobCard, JobType, ListBox, Loading, TextInput } from '../components'
-import { dbConnection } from '../utils';
-import { useSelector } from 'react-redux';
+import { ERROR_CODES, dbConnection } from '../utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../redux/userSlice';
 
 // Upload Job Form to post new Jobs [*** uses react-hook-form ***]
 const UploadJob = () => {
@@ -12,6 +13,7 @@ const UploadJob = () => {
   const[errMsg, setErrMsg] = useState('');
   const[isLoading, setIsLoading] = useState(false);
   const[isFetchingRecentJobs, setIsFetchingRecentJobs] = useState(false);
+  const dispatch = useDispatch();
   
   // Handle Job Post Form...
   const {
@@ -48,6 +50,8 @@ const UploadJob = () => {
         console.log('###Job Successfully Added');
         fetchLoggedInCompayInfo();
         reset();
+      } else if(ERROR_CODES.includes(resp?.response?.status)) {
+        dispatch(logout());
       }
     } catch(err) {
       console.log(err);
@@ -71,6 +75,8 @@ const UploadJob = () => {
     if(resp.status == 200) {
       console.log('###UpdatedJobProfileInfo: ', resp?.data);
       setRecentJobPosts(resp?.data?.jobPosts);
+    } else if(ERROR_CODES.includes(resp?.response?.status)) {
+      dispatch(logout());
     } else {
       console.log('###Error While fetching Job Details');
     }

@@ -5,10 +5,11 @@ import { FaHeartBroken } from "react-icons/fa";
 import moment from 'moment'
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { CustomButton, JobCard, Loading } from '../components'
-import { dbConnection } from '../utils';
-import { useSelector } from 'react-redux';
+import { ERROR_CODES, dbConnection } from '../utils';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaMapLocationDot } from 'react-icons/fa6';
 import { MdEmail } from 'react-icons/md';
+import { logout } from '../redux/userSlice';
 
 const JobDetail = () => {
   
@@ -18,6 +19,7 @@ const JobDetail = () => {
   const[similarJobInfo, setSimilarJobInfo] = useState('');
   const[jdSelected, setjdSelected] = useState(true);
   const[isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   //service call to fetch Job details based on JobId...
   const fetchJobDetaial = async () => {
@@ -37,6 +39,8 @@ const JobDetail = () => {
       if(resp?.data?.similarJobs) {
         setSimilarJobInfo(resp?.data?.similarJobs);
       }
+    } else if(ERROR_CODES.includes(resp?.response?.status)) {
+      dispatch(logout());
     } else {
       console.log('###Unable to fetch Job Details');
       setJobInfo('');
@@ -60,6 +64,8 @@ const JobDetail = () => {
         if(resp?.status === 200) {
           window.location.replace('/'); //Once Deleted Successfully --> Go to HomePage...
           console.log('###Job Post Deleted successfully');
+        } else if(ERROR_CODES.includes(resp?.response?.status)) {
+          dispatch(logout());
         }
       } catch (error) {
         console.log('###Error While Deleting JobPost', error);

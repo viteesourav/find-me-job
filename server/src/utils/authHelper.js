@@ -12,7 +12,7 @@ const parsePassword = (password, salt) => {
     return crypto.createHmac('sha256', [salt, password].join('/')).update(CRYPTO_SECRET_KEY).digest('hex');
 }
 
-//Funtion to create jwt
+//Funtion to create jwt --> Contains LoggedIn UserID and valid for 30 mins
 const createToken = (id) => {
     return jwt.sign(
         {
@@ -20,7 +20,7 @@ const createToken = (id) => {
         },
         JWT_SECRET_KEY,
         {
-            expiresIn: '1d'
+            expiresIn: '30m'
         }
     )
 }
