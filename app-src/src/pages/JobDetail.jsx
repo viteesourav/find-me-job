@@ -168,16 +168,19 @@ const JobDetail = () => {
                 </div>
                 <div className='w-full flex flex-col md:flex-row gap-2 items-center justify-between'>
                   {
-                    (user?._id !== jobInfo?.company?._id) ? 
+                    (user?.accountType === 'seeker') && 
                         <CustomButton
                           title={'Apply Now'}
                           customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl bg-black text-white border border-transparent hover:shadow-xl`}
-                        /> :
-                        <CustomButton
-                          title={'Delete Post'}
-                          onClick={handleOneDeletePostClick}
-                          customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl text-white border border-transparent hover:shadow-xl bg-red-400 hover:bg-red-500`}
-                  />
+                        />
+                  }
+                  {
+                  (user?._id === jobInfo?.company?._id) && 
+                    <CustomButton
+                      title={'Delete Post'}
+                      onClick={handleOneDeletePostClick}
+                      customBtnStyle={`w-full flex items-center justify-center font-semibold py-1.5 rounded-2xl text-white border border-transparent hover:shadow-xl bg-red-400 hover:bg-red-500`}
+                    />
                   }
                 </div>
               </div>

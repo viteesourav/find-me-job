@@ -131,9 +131,6 @@ For User:
    testuser@gmail.com/12345678
 
    
-** Bugs: 
+** New Functionality: 
 
-   1) When the token Expires, Just the '/' page opens, Others are not loading., 
-      -- The Home page should make the user login again.
-   2) A Company can Apply in the Other Companies Jobs. [Restrict it to Just Seekers Only]
    3) Seeker Job Apply and Company View Job Application Functionality.
