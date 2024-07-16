@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
     contact: {type:String},
     location: {type:String},
     profileUrl: {type:String},
+    resumeUrl: {type:String},
     jobTitle: {type:String},
     about: {type:String},
 },

@@ -34,7 +34,7 @@ const fetchUserDetails = async (req, res) => {
 const updateUserDetails = async (req,res) => {
     
     //extract the mandatory fields from API body and authorId [from authMiddleware] from req.body...
-    const{firstName, lastName, email, authorId, accountType, contact, location, profileUrl, jobTitle, about} = req.body;
+    const{firstName, lastName, email, authorId, accountType, contact, location, profileUrl, resumeUrl, jobTitle, about} = req.body;
 
     //Field Validation Check...
     if(!firstName || !lastName || !email) {
@@ -60,6 +60,7 @@ const updateUserDetails = async (req,res) => {
         contact,
         location,
         profileUrl,
+        resumeUrl,
         jobTitle,
         about,
     });

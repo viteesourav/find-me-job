@@ -119,9 +119,11 @@ const Navbar = () => {
             <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to={'/company/getAll'}>Companies</Link>
             </li>
-            <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
-              <Link to={'/upload-job'}>Upload Jobs</Link>
-            </li>
+            { user.accountType !== 'seeker' && 
+              <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
+                <Link to={'/upload-job'}>Upload Jobs</Link>
+              </li> 
+            }
             <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to={'/about-us'}>About Us</Link>
             </li>
