@@ -1,8 +1,8 @@
 import crypto from 'crypto'
 import { jwt } from '../models/index.js';
 
-const CRYPTO_SECRET_KEY = 'This is a secret 5653625432436766';
-const JWT_SECRET_KEY = 'This is a secret 34563546345364';
+const CRYPTO_SECRET_KEY = process.env.CRYPTO_SECRET_KEY;
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 //Function to generate random 128-bit string...
 const generateSalt = () => crypto.randomBytes(128).toString('base64');

@@ -3,6 +3,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
+import 'dotenv/config'
 import mongoSanitize from 'express-mongo-sanitize'
 import AppRouter from './router/index.js'
 import errorHandler from './middleware/ErrorHandler.js'
@@ -20,7 +21,7 @@ app.use(cors({
 }))
 
 //connect with a DB...
-const MONGO_HOST_URL = 'mongodb://127.0.0.1:27017/findMeJob'
+const MONGO_HOST_URL = process.env.MONGO_BASE_URL;
 mongoose.connect(MONGO_HOST_URL).then(()=> console.log('DB Connection Successful'));
 mongoose.connection.on('error', (err) => {
     console.log('DB Connection Error:', err);

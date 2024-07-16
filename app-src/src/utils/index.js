@@ -8,7 +8,7 @@ const ERROR_CODES = [
 
 //create a Axios Instance...
 const API_Instance = axios.create({
-    baseURL: 'http://localhost:8080/api-v1/',
+    baseURL: import.meta.env.VITE_APP_BASE_URL ?? '',
     responseType: 'json'
 })
 
@@ -34,7 +34,7 @@ const dbConnection = async ({url, method, data, token}) => {
 
 //handles File uploads to cloudinary... --> Connects to cloudinary to handle files.
 const handleFileUploads = async(payload) => {
-    const cloudinary_url = 'https://api.cloudinary.com/v1_1/dt5g032wn/image/upload';
+    const cloudinary_url = import.meta.env.VITE_CLOUDINARY_URL ?? '';
     let frmPayload = new FormData();
     frmPayload.append("file", payload);
     frmPayload.append("upload_preset", "jobsphere");
