@@ -121,8 +121,9 @@ NOTE: 3 things handling page to page Navigation and previous Page Naviagtion
    2. The use of useLoaction() to fetch curr Page location.
    3. using window.location.replace(newurl) OR navigate(newurl, {replace: true}) [from useNavigation()] 
 
+Website 
 
-Login Creds:
+Local Login Creds:
 
 For Company: 
    test@exp12344.com/12345678
@@ -130,7 +131,29 @@ For Company:
 For User: 
    testuser@gmail.com/12345678
 
+
+** Website Updates: 
+
+** Website URL: https://jobsphere-63tv.onrender.com/
+
+**Demo User Creds:
+	-- Company Creds:
+		1) testcompany.abc@gmail.com/12345678
+		2) testcompany.123@gmail.com/12345678
+		
+	-- User Creds:
+		1) testuser.123@gmail.com/12345678
+		
+**BugList:
+	-- Some Issue when we update the company Info --> It redirects to none...
+	-- Okay, So some issue with the way we are navigating or Re-directing from one page to another. --> It's coming as 404 blank.
+	-- window.location.reload is causing breakage in company Update info Step.
+	-- window.location.replace is causing breakage while logging out.
+		-- Idea: 
+			- use navigate form useNaviagte() and location from useLocation() --> Might fix the issue...
+	-- After Job Is Submited, the dropDown for JobType is not re-setting, need to fix that...
+	-- If we search location with "us" ---> Then it will filter out location that has the string "us" in them i.e US or Australia
    
-** New Functionality: 
+** New Functionality TO DO: 
 
    3) Seeker Job Apply and Company View Job Application Functionality.
