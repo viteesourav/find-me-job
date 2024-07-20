@@ -63,7 +63,6 @@ const MenuList = ({user, onClick}) => {
                     <Link 
                     to={`${user?.accountType ? `/user-profile`:`/company-profile/${user?._id}`}`}
                     className={`${active ? 'bg-blue-500 text-white' : 'text-gray-900'} flex w-full items-center rounded-md p-2 text-sm`}
-                    onClick={() => onClick(false)}
                     >
                       <CgProfile className={`mr-2 h-5 w-5`}
                         aria-hidden='true'
