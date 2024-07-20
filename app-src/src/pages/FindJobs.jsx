@@ -53,6 +53,7 @@ const FindJobs = () => {
         }))
       } else if(ERROR_CODES.includes(resp?.response?.status)) {
         dispatch(logout());
+        naviagteTo('/', {replace: true});
       }
     } catch (error) {
       console.log("###Error while Fetching Jobs", error);

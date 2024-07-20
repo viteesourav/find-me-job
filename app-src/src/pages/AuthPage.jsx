@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Office } from '../assets';
 import { SignUp } from '../components';
 
@@ -10,11 +10,12 @@ const AuthPage = () => {
 
   //Basically, You fetch the details of the current page, using useLocation hook.
   const location = useLocation();
+  const naviagte = useNavigate();
   let naviagtedFrom = location?.state?.from?.pathname || '/';  //If previous path not found, redirect to home page.
   // console.log('####', naviagtedFrom);
   //If the userToken Exist i.e User is already loggedin redirect him to where he came from to this page...
   if(user && user?.token) {
-    return window.location.replace(naviagtedFrom);
+    return naviagte(naviagtedFrom, {replace: true});
   }
 
   return (

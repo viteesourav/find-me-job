@@ -4,6 +4,7 @@ import { CustomButton, JobCard, JobType, ListBox, Loading, TextInput } from '../
 import { ERROR_CODES, dbConnection } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 // Upload Job Form to post new Jobs [*** uses react-hook-form ***]
 const UploadJob = () => {
@@ -13,7 +14,9 @@ const UploadJob = () => {
   const[errMsg, setErrMsg] = useState('');
   const[isLoading, setIsLoading] = useState(false);
   const[isFetchingRecentJobs, setIsFetchingRecentJobs] = useState(false);
+  
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   
   // Handle Job Post Form...
   const {
@@ -50,8 +53,10 @@ const UploadJob = () => {
         console.log('###Job Successfully Added');
         fetchLoggedInCompayInfo();
         reset();
+        setJobType('Full-Time');  //Reset DropDown After new Job uploaded...
       } else if(ERROR_CODES.includes(resp?.response?.status)) {
         dispatch(logout());
+        navigate('/', {replace: true});
       }
     } catch(err) {
       console.log(err);
@@ -77,6 +82,7 @@ const UploadJob = () => {
       setRecentJobPosts(resp?.data?.jobPosts);
     } else if(ERROR_CODES.includes(resp?.response?.status)) {
       dispatch(logout());
+      navigate('/', {replace: true});
     } else {
       console.log('###Error While fetching Job Details');
     }

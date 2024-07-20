@@ -12,6 +12,7 @@ import { CustomButton, Loading, TextInput } from '../components';
 import { DummyProfilePic } from '../assets';
 import { ERROR_CODES, dbConnection, handleFileUploads } from '../utils';
 import { login, logout } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 // Renders the Edit form For user Profile Update...
 const UserModal = ({isModalOpen, setIsModalOpen, userObj, updateUserInfo}) => {
@@ -19,8 +20,9 @@ const UserModal = ({isModalOpen, setIsModalOpen, userObj, updateUserInfo}) => {
   const[profileImg, setProfileImg] = useState(userObj?.profileUrl);
   const[resume, setResume] = useState(userObj?.resumeUrl);
   const[isLoading, setIsLoading] = useState(false);
+  
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   //lets update the details of the user when we submit...
   const OnSubmit = async (frmObj) => {
     try {
@@ -57,6 +59,7 @@ const UserModal = ({isModalOpen, setIsModalOpen, userObj, updateUserInfo}) => {
       } else if(ERROR_CODES.includes(resp?.response?.status)) {
         console.log('###Internal Error: ',resp);
         dispatch(logout());
+        navigate('/', {replace: true});
       }
     } catch (error) {
       console.log("###Error occured while updating User Info", error);
@@ -266,7 +269,9 @@ const UserProfile = () => {
   const[userInfo, setUserInfo ] = useState({});
   const[isOpen, setIsOpen] = useState(false);
   const[isLoading, setIsLoading] = useState(false);
+  
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //Function to fetch user Details....
   const fetchUserDetails = async () => {
@@ -287,6 +292,7 @@ const UserProfile = () => {
       } else if(ERROR_CODES.includes(resp?.response?.status)) {
         console.log('###Internal Error: ',resp);
         dispatch(logout());
+        navigate('/', {replace: true});
       }
     } catch(err) {
       console.log("###Error while fetching userdata", err);

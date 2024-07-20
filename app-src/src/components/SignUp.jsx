@@ -1,7 +1,7 @@
 import React, { useState, Fragment, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import TextInput from './TextInput'
 import CustomButton from './CustomButton'
@@ -17,6 +17,7 @@ const SignUp = ({open, setOpen}) => {
 
     //fetch from where we came to this page...
     const location = useLocation();
+    const navigate = useNavigate();
     let prevPageUrl = location?.state?.from?.pathname || '/';
 
     //Handle onClose and OnSubmit of the dialog box..
@@ -60,8 +61,8 @@ const SignUp = ({open, setOpen}) => {
                         ));
                 
                 //Navigates to the page from where you came to Auth Page and close the Model Window..
-                //window.location.replace(prevPageUrl);
-                //closeModal(true);
+                navigate(prevPageUrl, {replace: true});
+                closeModal(true);
 
             }
 

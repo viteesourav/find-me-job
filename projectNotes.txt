@@ -152,8 +152,21 @@ For User:
 		-- Idea: 
 			- use navigate form useNaviagte() and location from useLocation() --> Might fix the issue...
 	-- After Job Is Submited, the dropDown for JobType is not re-setting, need to fix that...
-	-- If we search location with "us" ---> Then it will filter out location that has the string "us" in them i.e US or Australia
-   
+	-- If we search location with "us" ---> Then it will filter out location that has the string "us" in them i.e US or Australia --> Expected.
+
+
+** Date: [21st July 2024]:
+   -- Above mentioned Bug Fixes are Done.
+   -- Conclusion For Navigation with Routes in React App:
+      -- Problem with window.location.replace() --> It reloads the whole page, i.e if window.location.replace('/about')
+      -- The server should know the '/about' route.
+      -- But in React App, '/about' is handled by react-routes which loads the correct component
+      -- Due to this, It shows error with 404 page not found..
+   -- Solution:
+      -- For React Route naviagation, use react-router hooks useNaviagte() and useLocation()
+      -- Add the same for the bugFix Solution.. 
+
+
 ** New Functionality TO DO: 
 
    3) Seeker Job Apply and Company View Job Application Functionality.

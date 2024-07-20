@@ -18,8 +18,7 @@ const userSlice = createSlice({
 
         logout: ((state, action) => {
             state.user = null;
-            window.localStorage.removeItem('userInfo'); //Clear the saved userInfo from localStorage..
-            window.location.replace('/user-auth'); //re-direct to auth-page...
+            window.localStorage.removeItem('userInfo'); //Clear the saved userInfo from localStorage...
         })
     }
 })

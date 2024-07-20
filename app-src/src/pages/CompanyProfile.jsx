@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { companies, jobs } from '../utils/data';
 import { CustomButton, JobCard, Loading, TextInput } from '../components';
 import { FiEdit3, FiUpload } from 'react-icons/fi';
@@ -19,6 +19,10 @@ const CompanyModal = ({isShowForm, toggelForm, companyData}) => {
   const [profileImg, setProfileImg] = useState('');
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+
+  //Handles current location and route Navigation...
+  const location = useLocation();
+  const navigate = useNavigate();
   
   // handle update company-Info...
   const OnSubmit = async(frmObj) => {
@@ -48,10 +52,11 @@ const CompanyModal = ({isShowForm, toggelForm, companyData}) => {
         }));
         
         console.log('####Update Successful', res);  
-        setTimeout(()=> window.location.reload(), 1500); //reload the current Page...
+        setTimeout(()=> navigate(location.pathname), 1500); //reload the current Page...
       } else if(ERROR_CODES.includes(res?.response?.status)) {
         console.log('###Internal Error: ',res);
         dispatch(logout());
+        navigate('/', {replace: true});
       }
       closeModal(true);
     } catch (error) {
@@ -220,7 +225,7 @@ const CompanyProfile = () => {
   const[openForm, setOpenForm] = useState(false); //handles the Edit company Modal popup...
 
   const dispatch = useDispatch();
-  
+  const navigate = useNavigate();
   //fetch company Info...
   const fetchCompanyData = async () => {
     setIsLoading(true);    
@@ -237,6 +242,7 @@ const CompanyProfile = () => {
         setCompanyInfo(resp?.data)
       } else if(ERROR_CODES.includes(resp?.response?.status)) {
         dispatch(logout());
+        navigate('/', {replace: true});
       }
     } catch (error) {
       setIsLoading(false);
@@ -253,6 +259,7 @@ const CompanyProfile = () => {
       behavior:'smooth'
     })
     fetchCompanyData();
+    console.log("####Just Logging", location);
   }, []);
 
   return (

@@ -21,6 +21,8 @@ const JobDetail = () => {
   const[isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   //service call to fetch Job details based on JobId...
   const fetchJobDetaial = async () => {
     setIsLoading(true);
@@ -41,6 +43,7 @@ const JobDetail = () => {
       }
     } else if(ERROR_CODES.includes(resp?.response?.status)) {
       dispatch(logout());
+      navigate('/', {replace: true});
     } else {
       console.log('###Unable to fetch Job Details');
       setJobInfo('');
@@ -62,10 +65,11 @@ const JobDetail = () => {
         setIsLoading(false);
   
         if(resp?.status === 200) {
-          window.location.replace('/'); //Once Deleted Successfully --> Go to HomePage...
+          navigate('/', {replace: true}); //Once Deleted Successfully --> Go to HomePage...
           console.log('###Job Post Deleted successfully');
         } else if(ERROR_CODES.includes(resp?.response?.status)) {
           dispatch(logout());
+          navigate('/', {replace: true});
         }
       } catch (error) {
         console.log('###Error While Deleting JobPost', error);

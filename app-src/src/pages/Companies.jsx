@@ -63,6 +63,7 @@ const Companies = () => {
           console.log("###fetching Companies Info", resp);
       } else if(ERROR_CODES.includes(resp?.response?.status)) {
         dispatch(logout());
+        navigate('/', {replace: true});
       } else {
           console.log("###Error While fetching Companies Info", resp);
       }

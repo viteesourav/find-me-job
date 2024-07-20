@@ -1,5 +1,5 @@
 import React, { Fragment, useDebugValue, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import { BiChevronDown } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
@@ -16,11 +16,13 @@ import { DummyProfilePic } from '../assets';
 const MenuList = ({user, onClick}) => {
   
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogOut = () => {
     console.log('###Logger: Logging You Out');
     dispatch(logout());
     onClick();
+    navigate('/', {replace: true});
   };
 
   return (
