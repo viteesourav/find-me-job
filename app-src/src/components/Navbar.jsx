@@ -21,7 +21,6 @@ const MenuList = ({user, onClick}) => {
   const handleLogOut = () => {
     console.log('###Logger: Logging You Out');
     dispatch(logout());
-    onClick();
     navigate('/', {replace: true});
   };
 
@@ -32,7 +31,7 @@ const MenuList = ({user, onClick}) => {
           <Menu.Button className='inline-flex gap-2 w-full rounded-md bg-white md:px-4 py-2 text-sm font-medium text-slate-700 hover:bg-opacity-20'>
             <div className='leading-[80px] flex flex-col items-start'>
               <p className='text-sm font-semibold'> 
-                { (user.accountType && user.accountType === 'seeker') ? `${user?.firstName} ${user?.lastName}` : user?.name } 
+                { (user && user?.accountType === 'seeker') ? `${user?.firstName} ${user?.lastName}` : user?.name } 
               </p>
               <span className='text-sm text-blue-600'>
                 { user?.jobTitle ?? user?.email}
@@ -64,7 +63,7 @@ const MenuList = ({user, onClick}) => {
                     <Link 
                     to={`${user?.accountType ? `/user-profile`:`/company-profile/${user?._id}`}`}
                     className={`${active ? 'bg-blue-500 text-white' : 'text-gray-900'} flex w-full items-center rounded-md p-2 text-sm`}
-                    onClick={onClick}
+                    onClick={() => onClick(false)}
                     >
                       <CgProfile className={`mr-2 h-5 w-5`}
                         aria-hidden='true'
@@ -121,7 +120,7 @@ const Navbar = () => {
             <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
               <Link to={'/company/getAll'}>Companies</Link>
             </li>
-            { user.accountType !== 'seeker' && 
+            { user && user?.accountType !== 'seeker' && 
               <li className='border border-b-2 border-transparent outline-none rounded-b-sm hover:border-b-blue-500 transition hover:delay-300 ease-in-out hover:shadow-lg hover:shadow-slate-200'>
                 <Link to={'/upload-job'}>Upload Jobs</Link>
               </li> 
@@ -188,7 +187,7 @@ const Navbar = () => {
                 </Link>
               ): (
                 <div>
-                  <MenuList user={user} onClick={handleOnNavClose} />
+                  <MenuList user={user} onClick={(isVisible) => setIsOpen(isVisible)} />
                 </div>
               )
             }
